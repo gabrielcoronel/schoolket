@@ -11,7 +11,8 @@
   "author": "Gabriel Coronel",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "mariadb": "^3.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
