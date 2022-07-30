@@ -1,19 +1,12 @@
-const express = require("express");
-const mariadb = require("mariadb");
+import express from 'express';
 
-const app = express();
-// const pool = mariadb.createPool({
-//   host: '127.0.0.1',
-//   user: 'gabriel',
-//   password: 'magicmike33',
-//   database: 'prueba_expotec',
-//   connectionLimit: 100
-// });
+import apiRouter from "./apiRouter.js";
 
+const main = express();
 const PORT = 3000;
 
-app.get("/", (req, res) => {
-  res.send("Hola mundo!");
-});
+main.use("/api", apiRouter);
 
-app.listen(PORT, () => console.log(`Escuchando en el puerto ${PORT}`));
+main.get("/", (_, res) => res.sendFile("/home/gabriel/projects/expotec/server/src/test.html"));
+
+main.listen(PORT, () => console.log(`Escuchando en el puerto ${PORT}`));

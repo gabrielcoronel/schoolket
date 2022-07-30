@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS product;
+
+CREATE TABLE student (
+  username 		VARCHAR(100) 	NOT NULL 	PRIMARY KEY,
+  name 	   		VARCHAR(100) 	NOT NULL,
+  surname1 		VARCHAR(100) 	NOT NULL,
+  surname2 		VARCHAR(100) 	NOT NULL,
+  reputation 		INT 		NOT NULL,
+  phone_number 		CHAR(8) 	NOT NULL
+);
+
+CREATE TABLE product (
+  username 		VARCHAR(100) 	NOT NULL,
+  product_id 		INT 		NOT NULL	PRIMARY KEY	AUTO_INCREMENT,
+  title 		VARCHAR(100) 	NOT NULL,
+  description 		TEXT 		NOT NULL,
+  price 		INT 		NOT NULL
+);
