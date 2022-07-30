@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <div>
+    <button onclick="enviarEstudiante()">Presionar para crear estudiante</button>
+    <button onclick="enviarProducto()">Presionar para crear producto</button>
+  </div>
+  <div>
+    <button onclick="obtenerEstudiante()">Presiona para obtener estudiante</button>
+    <button onclick="obtenerProducto()">Presiona para obtener producto</button>
+  </div>
+  <div>
+    <button onclick="obtenerProductoS()">Ver productos</button>
+    <button onclick="obtenerVista()">Ver vista</button>
+  </div>
+
+</body>
+
+<script>
+  async function sendResource(route, body) {
+    const options = {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(body)
+    };
+
+    let response = null;
+
+    try {
+      response = await fetch(route, options);
+    } catch (err) {
+      throw new Error(`Failed to fetch ${route}`, { cause: err });
+    }
+
+    if (response.ok)
+      return response;
+    else
+      throw new Error(`Bad request at ${route} with ${JSON.stringify(body)}`, {
+        cause: {
+          route: route,
+          body: body
+        }
+      });
+  }
+
+  async function retrieveResource(route, body) {
+    const response = await sendResource(route, body);
+
+    try {
+      const json = await response.json();
+
+      return json;
+    } catch (err) {
+      throw new Error("Failed to parse response JSON", { cause: err });
+    }
+  }
+
+  async function enviarEstudiante() {
+    const roberto = {
+      username: 'roberto_come_caca',
+      name: 'Roberto',
+      surname1: 'Álvarez',
+      surname2: 'Espinoza',
+      reputation: 20,
+      phone_number: '88888888'
+    };
+
+    try {
+      await sendResource("/api/createStudent", roberto);
+
+      console.log("Exito al crear un estudiante");
+    } catch (err) {
+      console.log("Hubo una excepción al crear un estudiante");
+
+      console.log(err);
+    }
+  }
+
+  async function enviarProducto() {
+    const vibrador = {
+      username: 'roberto_come_caca',
+      title: 'Vibrador Rosado',
+      description: 'muchas velocidades',
+      price: 5000
+    };
+
+    try {
+      await sendResource("/api/createProduct", vibrador);
+
+      console.log("Exito al crear un articulo");
+    } catch (err) {
+      console.log("Hubo una excepcion al crear un articulo");
+
+      console.log(err);
+    }
+  }
+
+  async function obtenerEstudiante() {
+    let student = null;
+
+    try {
+      student = await retrieveResource("/api/getStudent", { username: "roberto_come_caca" });
+
+      console.log(student);
+    } catch (err) {
+      console.log("Hubo una excepción al obtener un estudiante");
+
+      console.log(err);
+    }
+  }
+
+  async function obtenerProducto() {
+    let product = null;
+
+    try {
+      product = await retrieveResource("/api/getProduct", { product_id: 7 });
+
+      console.log(product);
+    } catch (err) {
+      console.log("Hubo una excepción al obtener un producto");
+
+      console.log(err);
+    }
+  }
+
+  async function obtenerProductoS() {
+    let products = null;
+
+    try {
+      products = await retrieveResource("/api/getStudentProducts", { username: "roberto_come_caca" });
+
+      console.log(products);
+    } catch (err) {
+      console.log("Hubo una excepción al obtener los productos del estudiante");
+
+      console.log(err);
+    }
+  }
+
+  async function obtenerVista() {
+    let view = null;
+
+    try {
+      view = await retrieveResource("/api/getProductWithStudent", { product_id: 8 });
+
+      console.log(view);
+    } catch (err) {
+      console.log("Hubo una excepción al obtener la vista");
+
+      console.log(err);
+    }
+  }
+</script>
+
+</html>
