@@ -59,34 +59,11 @@ apiRouter.post("/getProduct", (req, res) => {
 });
 
 apiRouter.post("/getStudentProducts", async (req, res) => {
-  const username = req.body.username;
-
-  try {
-    const products = await db.getStudentProducts(username);
-
-    res.json(products);
-    return;
-  } catch (err) {
-    console.log(err);
-
-    res.sendStatus(HTTP_FAILURE);
-    return;
-  }
+  get(req, res, "username", db.getStudentProducts);
 });
 
 apiRouter.post("/getProductWithStudent", async (req, res) => {
-  const product_id = req.body.product_id;
-
-  try {
-    const view = await db.getProductWithStudent(product_id);
-
-    res.json(view);
-  } catch (err) {
-    console.log(err);
-
-    res.sendStatus(HTTP_FAILURE);
-    return;
-  }
+  get(req, res, "product_id", db.getProductWithStudent);
 });
 
 export default apiRouter;
