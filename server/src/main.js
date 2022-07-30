@@ -1,8 +1,8 @@
 import express from 'express';
+const main = express();
 
 import apiRouter from "./apiRouter.js";
 
-const main = express();
 const PORT = 3000;
 
 main.use("/api", apiRouter);
