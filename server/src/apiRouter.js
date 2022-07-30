@@ -1,7 +1,7 @@
 import express from "express";
 const apiRouter = express.Router();
 
-import * as db from "./database.js"
+import * as db from "./database.js";
 
 // Constantes de HTTP
 const HTTP_SUCCESS = 200;
