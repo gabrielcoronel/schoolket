@@ -179,7 +179,7 @@ async function existsStudent(username) {
     STUDENT_TABLE_NAME, "username", username, "Failed to check if the student existed"
   );
 
-  return result;
+  return { exists: result };
 }
 
 async function existsProduct(product_id) {
@@ -187,7 +187,7 @@ async function existsProduct(product_id) {
     PRODUCT_TABLE_NAME, "product_id", product_id, "Failed to check if the product existed"
   );
 
-  return result;
+  return { exists: result };
 }
 
 export {

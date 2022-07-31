@@ -1,0 +1,8 @@
+.invisible {
+  display: none;
+}
+
+.ModeSelector-selected {
+  background-color: black;
+  color: white;
+}

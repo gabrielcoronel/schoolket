@@ -42,6 +42,22 @@ async function get(request, response, idKey, getFunction) {
   }
 }
 
+async function exists(request, response, idKey, existsFunction) {
+  const idValue = request.body[idKey];
+
+  try {
+    const result = await existsFunction(idValue);
+
+    response.json(result);
+    return
+  } catch (err) {
+    console.log(err);
+
+    response.sendStatus(HTTP_FAILURE);
+    return;
+  }
+}
+
 apiRouter.post("/createStudent", (req, res) => {
   create(req, res, db.createStudent);
 });
@@ -58,12 +74,20 @@ apiRouter.post("/getProduct", (req, res) => {
   get(req, res, "product_id", db.getProduct);
 });
 
-apiRouter.post("/getStudentProducts", async (req, res) => {
+apiRouter.post("/getStudentProducts", (req, res) => {
   get(req, res, "username", db.getStudentProducts);
 });
 
-apiRouter.post("/getProductWithStudent", async (req, res) => {
+apiRouter.post("/getProductWithStudent", (req, res) => {
   get(req, res, "product_id", db.getProductWithStudent);
+});
+
+apiRouter.post("/existsStudent", (req, res) => {
+  exists(req, res, "username", db.existsStudent);
+})
+
+apiRouter.post("/existsProduct", (req, res) => {
+  exists(req, res, "product_id", db.existsProduct);
 });
 
 export default apiRouter;
