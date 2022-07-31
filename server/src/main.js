@@ -3,7 +3,7 @@ const main = express();
 
 import apiRouter from "./apiRouter.js";
 
-const PORT = 3000;
+const PORT = 3001;
 
 main.use("/api", apiRouter);
 
