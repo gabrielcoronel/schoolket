@@ -89,6 +89,24 @@ async function select(tableName, idKey, idValue, errorMessage) {
   return result;
 }
 
+async function exists(tableName, idKey, idValue, errorMessage) {
+  const query = `
+    SELECT 1
+    FROM ${tableName}
+    WHERE ${idKey} = '${idValue}'
+  `;
+
+  let result = null;
+
+  try {
+    result = await pool.query(query);
+  } catch (err) {
+    throw new Error(errorMessage, { cause: err });
+  }
+
+  return (result.length !== 0);
+}
+
 async function createStudent(student) {
   const result = await insert(STUDENT_TABLE_NAME, student, "Failed to create student");
 
@@ -156,7 +174,24 @@ async function getProductWithStudent(product_id) {
   return view;
 }
 
+async function existsStudent(username) {
+  const result = await exists(
+    STUDENT_TABLE_NAME, "username", username, "Failed to check if the student existed"
+  );
+
+  return result;
+}
+
+async function existsProduct(product_id) {
+  const result = await exists(
+    PRODUCT_TABLE_NAME, "product_id", product_id, "Failed to check if the product existed"
+  );
+
+  return result;
+}
+
 export {
   createStudent, createProduct,
-  getStudent, getProduct, getStudentProducts, getProductWithStudent
+  getStudent, getProduct, getStudentProducts, getProductWithStudent,
+  existsStudent, existsProduct
 };

@@ -2,6 +2,7 @@ import express from 'express';
 const main = express();
 
 import apiRouter from "./apiRouter.js";
+import { existsStudent, existsProduct } from './database.js';
 
 const PORT = 3001;
 
