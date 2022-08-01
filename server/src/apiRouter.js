@@ -5,7 +5,7 @@ import * as db from "./database.js";
 
 // Constantes de HTTP
 const HTTP_SUCCESS = 200;
-const HTTP_FAILURE = 400;
+const HTTP_FAILURE = 369;
 
 // Middleware para parsear las solicitudes en formato JSON
 apiRouter.use(express.json());
@@ -27,14 +27,20 @@ async function create(request, response, createFunction) {
 }
 
 async function get(request, response, idKey, getFunction) {
-  const idValue = request.body[idKey];
+  console.log(`get: trying to get ${idKey}`);
 
+  const idValue = request.body[idKey];
+  console.log(`get: got ${idValue}`);
+
+  console.log(`get: trying to retrieve data from database`);
   try {
     const object = await getFunction(idValue);
+    console.log(`get: retrieved ${object}`);
 
     response.json(object);
     return;
   } catch (err) {
+    console.log(`get: failed at retrieving data from database`);
     console.log(err);
 
     response.sendStatus(HTTP_FAILURE);

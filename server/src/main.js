@@ -1,10 +1,8 @@
 import express from 'express';
-const main = express();
-
 import cors from 'cors';
-
 import apiRouter from "./apiRouter.js";
 
+const main = express();
 const PORT = 3001;
 
 main.use("/", cors());

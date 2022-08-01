@@ -1,55 +1,64 @@
 import { React, useState } from 'react';
-import { retrieveResource } from './fetching.js';
+import fetchResource from './fetchResource.js';
 
 import XImage from "./equis.jpg";
 import "./LogIn.css";
 
-async function authenticateSignUp(username) {
+const API_TEST_ADDRESS = "http://localhost:3001";
+
+async function checkUsername(username) {
   let response = null;
 
   try {
-    response = await retrieveResource("http://localhost:3001/api/existsStudent", {
-      username: username
-    });
+    response = await fetchResource(
+      API_TEST_ADDRESS + "/api/existsStudent",
+      {
+        username: username
+      }
+    );
   } catch (err) {
-    console.log(err);
-
-    throw new Error("authenticateSignUp", { cause: err });
+    throw new Error("", { cause: err });
   }
 
-  const existsStudent = response.exists;
+  return response.exists;
+}
 
-  return !existsStudent;
+
+async function authenticateSignUp(username) {
+  let exists = null;
+
+  try {
+    exists = await checkUsername(username);
+  } catch (err) {
+    throw new Error("", { cause: err });
+  }
+
+  return !exists;
 }
 
 async function authenticateSignIn(username, password) {
-  let check = null;
+  let exists = null;
 
   try {
-    check = await retrieveResource("https://localhost:3001/api/existsStudent", {
-      username: username
-    });
+    exists = await checkUsername(username);
   } catch (err) {
-    console.log(err);
-
-    throw new Error("authenticateSignIn", { cause: err });
+    throw new Error("", { cause: err });
   }
 
-  const studentExists = check.exists;
-
-  if (!studentExists)
+  if (!exists)
     return false;
 
   let student = null;
 
   try {
-    student = await retrieveResource("/api/getStudent", {
-      username: username
-    });
+    student = await fetchResource(
+      API_TEST_ADDRESS + "/api/getStudent",
+      {
+        username: username
+      }
+    );
   } catch (err) {
-    console.log(err);
-
-    throw new Error("authenticateSignIn", { cause: err });
+    throw new Error("", { cause: err });
   }
 
   return (password === student.password);
@@ -136,7 +145,7 @@ function LogInBox(props) {
     <div>
       <ModeSelector
         onSignUp={props.onSignUp}
-        onClick={props.onModeSelectorClick}
+        onClick={props.onModeChange}
       />
 
       <Input
@@ -166,6 +175,13 @@ function LogIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  function onModeChange(newOnSignUp) {
+    if (newOnSignUp !== onSignUp)
+      setOnError(false);
+
+    setOnSignUp(newOnSignUp);
+  }
+
   async function onLogIn() {
     let result;
 
@@ -192,7 +208,7 @@ function LogIn() {
         onSignUp={onSignUp}
         username={username}
         password={password}
-        onModeSelectorClick={setOnSignUp}
+        onModeChange={onModeChange}
         onUsernameChange={setUsername}
         onPasswordChange={setPassword}
         onLogIn={onLogIn}
