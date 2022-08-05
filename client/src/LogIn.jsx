@@ -1,220 +1,265 @@
-import { React, useState } from 'react';
-import fetchResource from './fetchResource.js';
+import { useEffect, useState } from 'react';
+import * as Formik from 'formik';
+import * as Yup from 'yup';
+import './LogIn.css';
 
-import XImage from "./equis.jpg";
-import "./LogIn.css";
+// Ponerle más restricciones a cada campo (aprender RegEx)
+const MAX_STRING_LENGTH = 100;
+const maxStringLengthSchema = (label) => {
+  return (
+    Yup.string()
+      .trim()
+      .required(`El campo '${label}' es obligatorio`)
+      .max(MAX_STRING_LENGTH,
+        `${label} no puede exceder los ${MAX_STRING_LENGTH} caractéres`
+      )
+  );
+};
 
-const API_TEST_ADDRESS = "http://localhost:3001";
+const phoneNumberSchema = Yup.string()
+  .trim()
+  .required("El campo 'número de télefono' es obligatorio")
+  .matches(/^\d+$/, "El número de teléfeno solo puede contener dígitos")
+  .length(8, "El número de teléfono tiene que tener 8 dígitos");
 
-async function checkUsername(username) {
-  let response = null;
+const Field = ({
+  label, className,
+  updateErrorMessage,
+  isSubmitting,
+  ...props
+}) => {
+  const [field, meta] = Formik.useField({ ...props });
 
-  try {
-    response = await fetchResource(
-      API_TEST_ADDRESS + "/api/existsStudent",
-      {
-        username: username
-      }
-    );
-  } catch (err) {
-    throw new Error("", { cause: err });
-  }
-
-  return response.exists;
-}
-
-
-async function authenticateSignUp(username) {
-  let exists = null;
-
-  try {
-    exists = await checkUsername(username);
-  } catch (err) {
-    throw new Error("", { cause: err });
-  }
-
-  return !exists;
-}
-
-async function authenticateSignIn(username, password) {
-  let exists = null;
-
-  try {
-    exists = await checkUsername(username);
-  } catch (err) {
-    throw new Error("", { cause: err });
-  }
-
-  if (!exists)
-    return false;
-
-  let student = null;
-
-  try {
-    student = await fetchResource(
-      API_TEST_ADDRESS + "/api/getStudent",
-      {
-        username: username
-      }
-    );
-  } catch (err) {
-    throw new Error("", { cause: err });
-  }
-
-  return (password === student.password);
-}
-
-function ErrorMessage(props) {
-  const message = props.onSignUp ?
-    "Ya hay una cuenta con ese nombre de usuario" :
-    "Nombre de usuario o contraseña incorrectos";
+  useEffect(() => {
+    if (isSubmitting && meta.error !== undefined)
+      updateErrorMessage(meta.error);
+  }, [meta.error, isSubmitting, updateErrorMessage]);
 
   return (
-    <div className={props.onError ? null : "invisible"}>
-      <img
-        src={XImage}
-        alt=""
+    <label className="Field">
+      {label}
+
+      <input
+        {...field}
+        {...props}
       />
-
-      <span>{message}</span>
-    </div>
+    </label>
   );
-}
+};
 
-function ModeSelector(props) {
+const SignUpForm = ({ updateErrorMessage }) => {
+  return (
+    <Formik.Formik
+      initialValues={{
+        username: '',
+        name: '',
+        surname1: '',
+        surname2: '',
+        phoneNumber: '',
+        password: ''
+      }}
+      validationSchema={Yup.object({
+        username: maxStringLengthSchema("nombre de usuario"),
+        name: maxStringLengthSchema("nombre"),
+        surname1: maxStringLengthSchema("primer apellido"),
+        surname2: maxStringLengthSchema("segundo apellido"),
+        phoneNumber: phoneNumberSchema,
+        password: maxStringLengthSchema("contraseña")
+      })}
+      onSubmit={(values, { setSubmitting }) => {
+        console.log("Se creó una cuenta: " + JSON.stringify(values));
+        setSubmitting(false);
+      }}
+    >
+      {({ isSubmitting }) => (
+        <Formik.Form className="SignUpForm">
+          <Field
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            name="username"
+            label="Nombre de usuario"
+            type="text"
+          />
+          <Field
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            name="name"
+            label="Nombre"
+            type="text"
+          />
+          <Field
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            name="surname1"
+            label="Primer apellido"
+            type="text"
+          />
+          <Field
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            name="surname2"
+            label="Segundo apellido"
+            type="text"
+          />
+          <Field
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            name="phoneNumber"
+            label="Número de teléfono"
+            type="tel"
+          />
+          <Field
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            name="password"
+            label="Contraseña"
+            type="password"
+          />
+
+          <button type="submit">Crear cuenta</button>
+        </Formik.Form>
+      )}
+    </Formik.Formik>
+  );
+};
+
+const SignInForm = ({ updateErrorMessage }) => {
+  return (
+    <Formik.Formik
+      initialValues={{
+        username: '',
+        password: '',
+      }}
+      validationSchema={Yup.object({
+        username: maxStringLengthSchema("nombre de usuario"),
+        password: maxStringLengthSchema("contraseña")
+      })}
+      onSubmit={(values, { setSubmitting }) => {
+        console.log("Se inició sesión: " + JSON.stringify(values));
+        setSubmitting(false);
+      }}
+    >
+      {({ isSubmitting }) => (
+        <Formik.Form className="SignInForm">
+          <Field
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            name="username"
+            label="Nombre de usuario"
+            type="text"
+          />
+
+          <Field
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            name="password"
+            label="Contraseña"
+            type="password"
+          />
+
+          <button type="submit">Iniciar sesión</button>
+        </Formik.Form>
+      )}
+    </Formik.Formik>
+  );
+};
+
+const ModeSelect = ({
+  isSigningUp, updateIsSigningUp
+}) => {
   return (
     <div>
       <button
         className={
-          props.onSignUp ?
-            "ModeSelector-selected" :
-            null
+          isSigningUp ?
+          "ModeSelect-selected" :
+          null
         }
-        onClick={() => props.onClick(true)}
+        onClick={() => updateIsSigningUp(true)}
       >
-        Crear cuenta
+        Crear Cuenta
       </button>
 
       <button
         className={
-          !props.onSignUp ?
-            "ModeSelector-selected" :
-            null
+          !isSigningUp ?
+          "ModeSelect-selected" :
+          null
         }
-
-        onClick={() => props.onClick(false)}
+        onClick={() => updateIsSigningUp(false)}
       >
         Iniciar sesión
       </button>
     </div>
   );
-}
+};
 
-function Input(props) {
+const FormBox = ({ updateErrorMessage }) => {
+  const [isSigningUp, setIsSigningUp] = useState(true);
+
   return (
     <div>
-      <label>
-        {props.label}
+      <ModeSelect
+        isSigningUp={isSigningUp}
+        updateIsSigningUp={setIsSigningUp}
+      />
 
-        <input
-          value={props.text}
-          placeholder={props.placeholder}
-          onChange={(e) => props.onChange(e.target.value)}
-        />
-      </label>
+      {
+        isSigningUp ?
+          <SignUpForm
+            updateErrorMessage={updateErrorMessage}
+          /> :
+          <SignInForm
+            updateErrorMessage={updateErrorMessage}
+          />
+      }
     </div>
   );
-}
+};
 
-function LogInButton(props) {
-  const message = props.onSignUp ?
-    "Crear cuenta" :
-    "Iniciar sesión";
-
+const ErrorBox = ({
+  message, updateErrorMessage
+}) => {
   return (
-    <div>
-      <button onClick={props.onClick}>
-        {message}
+    <div
+      className={[
+        (
+        message === "" ?
+        "ErrorBox-invisible" :
+        null
+        ),
+        "ErroxBox-div",
+        "red"
+      ]
+      .join(" ")
+      }
+    >
+      <button onClick={() => updateErrorMessage("")}>
+        X
       </button>
+
+      <span>
+        {message}
+      </span>
     </div>
   );
-}
+};
 
-function LogInBox(props) {
-  return (
-    <div>
-      <ModeSelector
-        onSignUp={props.onSignUp}
-        onClick={props.onModeChange}
-      />
-
-      <Input
-        label="Nombre de usuario: "
-        text={props.username}
-        placeholder="UnicornioFantastico123"
-        onChange={props.onUsernameChange}
-      />
-
-      <Input
-        label="Contraseña: "
-        text={props.password}
-        onChange={props.onPasswordChange}
-      />
-
-      <LogInButton
-        onSignUp={props.onSignUp}
-        onClick={props.onLogIn}
-      />
-    </div>
-  );
-}
-
-function LogIn() {
-  const [onSignUp, setOnSignUp] = useState(true);
-  const [onError, setOnError] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  function onModeChange(newOnSignUp) {
-    if (newOnSignUp !== onSignUp)
-      setOnError(false);
-
-    setOnSignUp(newOnSignUp);
-  }
-
-  async function onLogIn() {
-    let result;
-
-    try {
-      if (onSignUp)
-        result = await authenticateSignUp(username);
-      else
-        result = await authenticateSignIn(username, password);
-    } catch (err) {
-      console.log(err);
-    }
-
-    setOnError(!result);
-  }
+const LogIn = () => {
+  const [errorMessage, setErrorMessage] = useState("");
 
   return (
     <div>
-      <ErrorMessage
-        onSignUp={onSignUp}
-        onError={onError}
+      <ErrorBox
+        message={errorMessage}
+        updateErrorMessage={setErrorMessage}
       />
 
-      <LogInBox
-        onSignUp={onSignUp}
-        username={username}
-        password={password}
-        onModeChange={onModeChange}
-        onUsernameChange={setUsername}
-        onPasswordChange={setPassword}
-        onLogIn={onLogIn}
+      <FormBox
+        updateErrorMessage={setErrorMessage}
       />
     </div>
   );
-}
+};
 
 export default LogIn;

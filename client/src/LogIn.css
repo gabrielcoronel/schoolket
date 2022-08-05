@@ -1,8 +1,36 @@
-.invisible {
+.ModeSelect-selected {
+  background-color: black;
+  color: white;
+}
+
+.ErrorBox-invisible {
   display: none;
 }
 
-.ModeSelector-selected {
-  background-color: black;
-  color: white;
+.ErrorBox-div {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.SignUpForm {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.SignInForm {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.Field {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: flex-start;
 }
