@@ -5,20 +5,23 @@ import * as db from "./database.js";
 
 // Constantes de HTTP
 const HTTP_SUCCESS = 200;
-const HTTP_FAILURE = 369;
+const HTTP_FAILURE = 400;
 
 // Middleware para parsear las solicitudes en formato JSON
 apiRouter.use(express.json());
 
 async function create(request, response, createFunction) {
   const body = request.body;
+  console.log(`create: trying to create ${JSON.stringify(body)}`);
 
   try {
     await createFunction(body);
+    console.log(`create: created ${JSON.stringify(body)}`);
 
     response.sendStatus(HTTP_SUCCESS);
     return;
   } catch (err) {
+    console.log(`create: failed to create ${JSON.stringify(body)}`);
     console.log(err);
 
     response.sendStatus(HTTP_FAILURE);

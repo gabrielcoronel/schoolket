@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import * as Formik from 'formik';
 import * as Yup from 'yup';
 import './LogIn.css';
+import * as Fetching from './fetching.js';
+
+// Añadir una reputación predeterminada a la base de datos
+const API_ADDRESS = "http://localhost:3001/api"
 
 // Ponerle más restricciones a cada campo (aprender RegEx)
 const MAX_STRING_LENGTH = 100;
@@ -16,11 +20,30 @@ const maxStringLengthSchema = (label) => {
   );
 };
 
+const joinClassNames = (classNames) => {
+  return classNames.join(" ");
+}
+
 const phoneNumberSchema = Yup.string()
   .trim()
   .required("El campo 'número de télefono' es obligatorio")
   .matches(/^\d+$/, "El número de teléfeno solo puede contener dígitos")
   .length(8, "El número de teléfono tiene que tener 8 dígitos");
+
+const checkUsername = async (username) => {
+  let result = null;
+
+  try {
+    result = await Fetching.retrieve(API_ADDRESS + "/existsStudent", {
+      username: username
+    })
+  } catch (err) {
+    console.log(`Error in checkUsername: ${err}`);
+  }
+
+  return result.exists;
+}
+
 
 const Field = ({
   label, className,
@@ -55,7 +78,7 @@ const SignUpForm = ({ updateErrorMessage }) => {
         name: '',
         surname1: '',
         surname2: '',
-        phoneNumber: '',
+        phone_number: '',
         password: ''
       }}
       validationSchema={Yup.object({
@@ -63,11 +86,28 @@ const SignUpForm = ({ updateErrorMessage }) => {
         name: maxStringLengthSchema("nombre"),
         surname1: maxStringLengthSchema("primer apellido"),
         surname2: maxStringLengthSchema("segundo apellido"),
-        phoneNumber: phoneNumberSchema,
+        phone_number: phoneNumberSchema,
         password: maxStringLengthSchema("contraseña")
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        console.log("Se creó una cuenta: " + JSON.stringify(values));
+      onSubmit={async (values, { setSubmitting, resetForm }) => {
+        const DEFAULT_REPUTATION = 25;
+
+        if (await checkUsername(values.username))
+          updateErrorMessage(`Ya existe una cuenta con ${values.username} como nombre de usuario`);
+        else
+          try {
+            // Crear al estudiante en la base de datos
+            await Fetching.send(API_ADDRESS + "/createStudent", {
+              reputation: DEFAULT_REPUTATION,
+              ...values
+            });
+
+            updateErrorMessage("");
+            resetForm();
+          } catch (err) {
+            console.log(`Error in onSubmit: ${err}`);
+          }
+
         setSubmitting(false);
       }}
     >
@@ -104,7 +144,7 @@ const SignUpForm = ({ updateErrorMessage }) => {
           <Field
             updateErrorMessage={updateErrorMessage}
             isSubmitting={isSubmitting}
-            name="phoneNumber"
+            name="phone_number"
             label="Número de teléfono"
             type="tel"
           />
@@ -134,9 +174,38 @@ const SignInForm = ({ updateErrorMessage }) => {
         username: maxStringLengthSchema("nombre de usuario"),
         password: maxStringLengthSchema("contraseña")
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        console.log("Se inició sesión: " + JSON.stringify(values));
-        setSubmitting(false);
+      onSubmit={async (values, { setSubmitting, resetForm }) => {
+        const errorMessage = `Nombre de usuario o contraseña incorrectos`;
+
+        if (!await checkUsername(values.username)) {
+          updateErrorMessage(errorMessage);
+
+          setSubmitting(false);
+          return;
+        }
+
+        let student = null;
+
+        try {
+          student = await Fetching.retrieve(API_ADDRESS + "/getStudent", {
+            username: values.username
+          })
+        } catch (err) {
+          console.log(`Error in onSubmit: ${err}`);
+        }
+
+        if (student.password !== values.password) {
+          updateErrorMessage(errorMessage);
+
+          setSubmitting(false);
+          return;
+        } else {
+          updateErrorMessage("");
+          resetForm();
+
+          setSubmitting(false);
+          return;
+        }
       }}
     >
       {({ isSubmitting }) => (
@@ -171,9 +240,13 @@ const ModeSelect = ({
     <div>
       <button
         className={
-          isSigningUp ?
-          "ModeSelect-selected" :
-          null
+          joinClassNames([
+            (
+              isSigningUp ?
+                "ModeSelect-selected" :
+                null
+            )
+          ])
         }
         onClick={() => updateIsSigningUp(true)}
       >
@@ -182,9 +255,13 @@ const ModeSelect = ({
 
       <button
         className={
-          !isSigningUp ?
-          "ModeSelect-selected" :
-          null
+          joinClassNames([
+            (
+              !isSigningUp ?
+                "ModeSelect-selected" :
+                null
+            )
+          ])
         }
         onClick={() => updateIsSigningUp(false)}
       >
@@ -222,16 +299,15 @@ const ErrorBox = ({
 }) => {
   return (
     <div
-      className={[
-        (
-        message === "" ?
-        "ErrorBox-invisible" :
-        null
-        ),
-        "ErroxBox-div",
-        "red"
-      ]
-      .join(" ")
+      className={
+        joinClassNames([
+          (
+            message === "" ?
+              "ErrorBox-invisible" :
+              null
+          ),
+          "ErroxBox-div"
+        ])
       }
     >
       <button onClick={() => updateErrorMessage("")}>

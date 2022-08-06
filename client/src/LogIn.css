@@ -1,3 +1,20 @@
+:root {
+  --background-color: whitesmoke;
+  --regular-color: black;
+  --accent-color: darkblue;
+  --accent-regular-color: white;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
+  background-color: var(--background-color);
+  color: var(--regular-color);
+
+  font-family: 'Roboto', sans-serif;
+}
+
 .ModeSelect-selected {
   background-color: black;
   color: white;
