@@ -38,7 +38,7 @@ async function get(request, response, idKey, getFunction) {
   console.log(`get: trying to retrieve data from database`);
   try {
     const object = await getFunction(idValue);
-    console.log(`get: retrieved ${object}`);
+    console.log(`get: retrieved ${JSON.stringify(object)}`);
 
     response.json(object);
     return;
