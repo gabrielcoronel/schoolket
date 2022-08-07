@@ -1,7 +1,9 @@
 import express from "express";
-const apiRouter = express.Router();
-
 import * as db from "./database.js";
+import dirName from "./dirName.js";
+import { existsSync } from 'node:fs';
+
+const apiRouter = express.Router();
 
 // Constantes de HTTP
 const HTTP_SUCCESS = 200;
@@ -99,5 +101,23 @@ apiRouter.post("/existsProduct", (req, res) => {
   exists(req, res, "product_id", db.existsProduct);
 });
 
+apiRouter.post("/getStudentAvatar", (req, res) => {
+  const username = req.body.username;
+  const base = "/img/profile";
+  const format = "png";
+
+  const url = `${base}/${username}.${format}`;
+
+  if (existsSync(url)) {
+    res.json({
+      url: url
+    });
+    return;
+  } else {
+    res.sendStatus(HTTP_FAILURE);
+
+    return;
+  }
+});
+
 export default apiRouter;
-export { apiRouter };
