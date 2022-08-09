@@ -21,7 +21,4 @@ const phoneNumberField = Yup.string()
   .matches(/^\d+$/, "El número de teléfeno solo puede contener dígitos")
   .length(8, "El número de teléfono tiene que tener 8 dígitos");
 
-const notNullField = Yup.mixed()
-  .test((obj) => obj !== null);
-
-export { regularField, phoneNumberField, notNullField };
+export { regularField, phoneNumberField };

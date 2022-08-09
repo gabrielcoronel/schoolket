@@ -6,7 +6,7 @@ import './LogIn.css';
 import Field from './Field.jsx';
 import ErrorBox from './ErrorBox.jsx';
 import FileChooser from './FileChooser.jsx';
-import { regularField, phoneNumberField, notNullField } from './validationSchemas';
+import { regularField, phoneNumberField } from './validationSchemas';
 
 import { classNames } from './react-util.js';
 import {
@@ -33,7 +33,7 @@ const SignUpForm = ({ updateErrorMessage }) => {
         surname2: regularField("segundo apellido"),
         phone_number: phoneNumberField,
         password: regularField("contraseña"),
-        files: notNullField
+        files: Yup.mixed().required("Tienes que elegir un avatar")
       })}
       onSubmit={async ({ files, ...student }, { setSubmitting, resetForm }) => {
         if (await usernameTaken(student.username)) {
@@ -72,6 +72,7 @@ const SignUpForm = ({ updateErrorMessage }) => {
             }}
             updateErrorMessage={updateErrorMessage}
             isSubmitting={isSubmitting}
+            name="files"
             label="Seleccionar avatar"
             accept="image/*"
             multiple={false}

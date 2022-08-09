@@ -1,14 +1,19 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
+import { useField } from 'formik';
 
 const FileChooser = ({
   label, updateFormData,
   accept, className,
   multiple, updateErrorMessage,
-  isSubmitting
+  isSubmitting, ...props
 }) => {
   const fileInput = useRef(null);
+  const [_, meta] = useField({ ...props });
 
-  // Añadir mensaje de error (useField?)
+  useEffect(() => {
+    if (isSubmitting && meta.error !== undefined)
+      updateErrorMessage(meta.error);
+  }, [meta.error, isSubmitting, updateErrorMessage]);
 
   return (
     <div className={className}>
@@ -22,7 +27,7 @@ const FileChooser = ({
       </button>
 
       <input
-        ref={fileInput}  
+        ref={fileInput}
         type="file"
         hidden
         accept={accept}
