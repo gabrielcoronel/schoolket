@@ -1,74 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as Formik from 'formik';
 import * as Yup from 'yup';
 import './LogIn.css';
-import * as Fetching from './fetching.js';
 
-// Añadir una reputación predeterminada a la base de datos
-const API_ADDRESS = "http://localhost:3001/api"
+import Field from './Field.jsx';
+import ErrorBox from './ErrorBox.jsx';
+import FileChooser from './FileChooser.jsx';
+import { regularField, phoneNumberField, notNullField } from './validationSchemas';
 
-// Ponerle más restricciones a cada campo (aprender RegEx)
-const MAX_STRING_LENGTH = 100;
-const maxStringLengthSchema = (label) => {
-  return (
-    Yup.string()
-      .trim()
-      .required(`El campo '${label}' es obligatorio`)
-      .max(MAX_STRING_LENGTH,
-        `${label} no puede exceder los ${MAX_STRING_LENGTH} caractéres`
-      )
-  );
-};
-
-const joinClassNames = (classNames) => {
-  return classNames.join(" ");
-}
-
-const phoneNumberSchema = Yup.string()
-  .trim()
-  .required("El campo 'número de télefono' es obligatorio")
-  .matches(/^\d+$/, "El número de teléfeno solo puede contener dígitos")
-  .length(8, "El número de teléfono tiene que tener 8 dígitos");
-
-const checkUsername = async (username) => {
-  let result = null;
-
-  try {
-    result = await Fetching.retrieve(API_ADDRESS + "/existsStudent", {
-      username: username
-    })
-  } catch (err) {
-    console.log(`Error in checkUsername: ${err}`);
-  }
-
-  return result.exists;
-}
-
-
-const Field = ({
-  label, className,
-  updateErrorMessage,
-  isSubmitting,
-  ...props
-}) => {
-  const [field, meta] = Formik.useField({ ...props });
-
-  useEffect(() => {
-    if (isSubmitting && meta.error !== undefined)
-      updateErrorMessage(meta.error);
-  }, [meta.error, isSubmitting, updateErrorMessage]);
-
-  return (
-    <label className="Field">
-      {label}
-
-      <input
-        {...field}
-        {...props}
-      />
-    </label>
-  );
-};
+import { classNames } from './react-util.js';
+import {
+  JSONHeaders, serverURL, usernameTaken,
+  createStudent, storeStudentAvatar
+} from './server-util.js';
 
 const SignUpForm = ({ updateErrorMessage }) => {
   return (
@@ -79,40 +23,60 @@ const SignUpForm = ({ updateErrorMessage }) => {
         surname1: '',
         surname2: '',
         phone_number: '',
-        password: ''
+        password: '',
+        files: null
       }}
       validationSchema={Yup.object({
-        username: maxStringLengthSchema("nombre de usuario"),
-        name: maxStringLengthSchema("nombre"),
-        surname1: maxStringLengthSchema("primer apellido"),
-        surname2: maxStringLengthSchema("segundo apellido"),
-        phone_number: phoneNumberSchema,
-        password: maxStringLengthSchema("contraseña")
+        username: regularField("nombre de usuario"),
+        name: regularField("nombre"),
+        surname1: regularField("primer apellido"),
+        surname2: regularField("segundo apellido"),
+        phone_number: phoneNumberField,
+        password: regularField("contraseña"),
+        files: notNullField
       })}
-      onSubmit={async (values, { setSubmitting, resetForm }) => {
-        const DEFAULT_REPUTATION = 25;
+      onSubmit={async ({ files, ...student }, { setSubmitting, resetForm }) => {
+        if (await usernameTaken(student.username)) {
+          updateErrorMessage(
+            `Ya existe una cuenta con ${student.username} como nombre de usuario`
+          );
 
-        if (await checkUsername(values.username))
-          updateErrorMessage(`Ya existe una cuenta con ${values.username} como nombre de usuario`);
-        else
-          try {
-            // Crear al estudiante en la base de datos
-            await Fetching.send(API_ADDRESS + "/createStudent", {
-              reputation: DEFAULT_REPUTATION,
-              ...values
-            });
+          setSubmitting(false);
+          return;
+        }
 
-            updateErrorMessage("");
-            resetForm();
-          } catch (err) {
-            console.log(`Error in onSubmit: ${err}`);
-          }
+        try {
+          await Promise.all([
+            createStudent(student),
+            storeStudentAvatar(student.username, files)
+          ]);
+        } catch (err) {
+          updateErrorMessage("Algo salió mal");
+          setSubmitting(false);
+          return;
+        }
 
+        resetForm();
+        updateErrorMessage("");
         setSubmitting(false);
+        return;
       }}
     >
-      {({ isSubmitting }) => (
-        <Formik.Form className="SignUpForm">
+      {({
+        isSubmitting, setFieldValue
+      }) => (
+        <Formik.Form className={null}>
+          <FileChooser
+            updateFormData={(formData) => {
+              setFieldValue("files", formData);
+            }}
+            updateErrorMessage={updateErrorMessage}
+            isSubmitting={isSubmitting}
+            label="Seleccionar avatar"
+            accept="image/*"
+            multiple={false}
+          />
+
           <Field
             updateErrorMessage={updateErrorMessage}
             isSubmitting={isSubmitting}
@@ -171,13 +135,13 @@ const SignInForm = ({ updateErrorMessage }) => {
         password: '',
       }}
       validationSchema={Yup.object({
-        username: maxStringLengthSchema("nombre de usuario"),
-        password: maxStringLengthSchema("contraseña")
+        username: regularField("nombre de usuario"),
+        password: regularField("contraseña")
       })}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
         const errorMessage = `Nombre de usuario o contraseña incorrectos`;
 
-        if (!await checkUsername(values.username)) {
+        if (!await usernameTaken(values.username)) {
           updateErrorMessage(errorMessage);
 
           setSubmitting(false);
@@ -187,11 +151,16 @@ const SignInForm = ({ updateErrorMessage }) => {
         let student = null;
 
         try {
-          student = await Fetching.retrieve(API_ADDRESS + "/getStudent", {
-            username: values.username
-          })
+          student = await fetch(serverURL("/getStudent"), {
+            method: "POST",
+            body: JSON.stringify({ username: values.username }),
+            headers: JSONHeaders
+          });
         } catch (err) {
-          console.log(`Error in onSubmit: ${err}`);
+          updateErrorMessage("Algo salió mal");
+
+          setSubmitting(false);
+          return;
         }
 
         if (student.password !== values.password) {
@@ -199,17 +168,16 @@ const SignInForm = ({ updateErrorMessage }) => {
 
           setSubmitting(false);
           return;
-        } else {
-          updateErrorMessage("");
-          resetForm();
-
-          setSubmitting(false);
-          return;
         }
+
+        resetForm();
+        updateErrorMessage("");
+        setSubmitting(false);
+        return;
       }}
     >
       {({ isSubmitting }) => (
-        <Formik.Form className="SignInForm">
+        <Formik.Form className={null}>
           <Field
             updateErrorMessage={updateErrorMessage}
             isSubmitting={isSubmitting}
@@ -239,30 +207,14 @@ const ModeSelect = ({
   return (
     <div>
       <button
-        className={
-          joinClassNames([
-            (
-              isSigningUp ?
-                "ModeSelect-selected" :
-                null
-            )
-          ])
-        }
+        className={null}
         onClick={() => updateIsSigningUp(true)}
       >
         Crear Cuenta
       </button>
 
       <button
-        className={
-          joinClassNames([
-            (
-              !isSigningUp ?
-                "ModeSelect-selected" :
-                null
-            )
-          ])
-        }
+        className={null}
         onClick={() => updateIsSigningUp(false)}
       >
         Iniciar sesión
@@ -290,33 +242,6 @@ const FormBox = ({ updateErrorMessage }) => {
             updateErrorMessage={updateErrorMessage}
           />
       }
-    </div>
-  );
-};
-
-const ErrorBox = ({
-  message, updateErrorMessage
-}) => {
-  return (
-    <div
-      className={
-        joinClassNames([
-          (
-            message === "" ?
-              "ErrorBox-invisible" :
-              null
-          ),
-          "ErroxBox-div"
-        ])
-      }
-    >
-      <button onClick={() => updateErrorMessage("")}>
-        X
-      </button>
-
-      <span>
-        {message}
-      </span>
     </div>
   );
 };

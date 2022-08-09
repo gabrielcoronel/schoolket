@@ -1,7 +1,8 @@
 import express from "express";
+import fileUpload from 'express-fileupload';
 import * as db from "./database.js";
 import dirName from "./dirName.js";
-import { existsSync } from 'node:fs';
+import { existsSync, writeFileSync } from 'node:fs';
 
 const apiRouter = express.Router();
 
@@ -9,8 +10,11 @@ const apiRouter = express.Router();
 const HTTP_SUCCESS = 200;
 const HTTP_FAILURE = 400;
 
-// Middleware para parsear las solicitudes en formato JSON
+const IMAGE_FORMAT = "png";
+
+// Middleware para parsear las solicitudes en formato JSON y archivos
 apiRouter.use(express.json());
+apiRouter.use(fileUpload());
 
 async function create(request, response, createFunction) {
   const body = request.body;
@@ -54,14 +58,20 @@ async function get(request, response, idKey, getFunction) {
 }
 
 async function exists(request, response, idKey, existsFunction) {
-  const idValue = request.body[idKey];
+  console.log(`exists: trying to read ${idKey}`);
 
+  const idValue = request.body[idKey];
+  console.log(`exists: read ${idValue}`)
+
+  console.log(`exists: trying to check ${idValue}`)
   try {
     const result = await existsFunction(idValue);
+    console.log(`exists: got ${result}`)
 
     response.json(result);
     return
   } catch (err) {
+    console.log(`exists: failed to check ${idValue}`);
     console.log(err);
 
     response.sendStatus(HTTP_FAILURE);
@@ -103,21 +113,39 @@ apiRouter.post("/existsProduct", (req, res) => {
 
 apiRouter.post("/getStudentAvatar", (req, res) => {
   const username = req.body.username;
-  const base = "/img/profile";
-  const format = "png";
+  const base = "/img/avatar";
+  const url = `${base}/${username}.${IMAGE_FORMAT}`;
 
-  const url = `${base}/${username}.${format}`;
+  console.log("getStudentAvatar");
+  console.table({ username, base, url });
 
   if (existsSync(url)) {
     res.json({
       url: url
     });
+
+    console.log("getStudentAvatar: file exists");
     return;
   } else {
     res.sendStatus(HTTP_FAILURE);
 
+    console.log("getStudentAvatar: file doesn't exist");
     return;
   }
+});
+
+apiRouter.post("/storeStudentAvatar", async (req, res) => {
+  const [username] = Object.keys(req.files);
+  const [avatar] = Object.values(req.files);
+  const path = `${dirName}/../student_avatars/${username}.${IMAGE_FORMAT}`;
+
+  console.log("/storeStudentAvatar: trying to store an avatar");
+  console.log(path);
+  console.log(avatar);
+
+  await avatar.mv(path);
+
+  res.sendStatus(HTTP_SUCCESS);
 });
 
 export default apiRouter;
