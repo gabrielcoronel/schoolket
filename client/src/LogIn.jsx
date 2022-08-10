@@ -3,16 +3,13 @@ import * as Formik from 'formik';
 import * as Yup from 'yup';
 import './LogIn.css';
 
-import Field from './Field.jsx';
-import ErrorBox from './ErrorBox.jsx';
-import FileChooser from './FileChooser.jsx';
-import { regularField, phoneNumberField } from './validationSchemas';
+import { Field, FileChooser, ErrorBox } from './components';
+import { regularField, phoneNumberField } from './util/validation-schemas.js';
 
-import { classNames } from './react-util.js';
 import {
   JSONHeaders, serverURL, usernameTaken,
   createStudent, storeStudentAvatar
-} from './server-util.js';
+} from './util/server-util.js';
 
 const SignUpForm = ({ updateErrorMessage }) => {
   return (
