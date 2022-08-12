@@ -20,7 +20,7 @@ apiRouter.post("/createStudent", async (req, res) => {
   try {
     await Promise.all([
       DB.createStudent(student),
-      IMG.storeStudentAvatar(avatar)
+      IMG.storeStudentAvatar(student.username, avatar)
     ]);
 
     res.json(HTTP_SUCCESS);
@@ -37,10 +37,10 @@ apiRouter.post("/createProduct", async (req, res) => {
   const product = req.body;
 
   try {
-    const [{ insertId }] = await Promise.all([
-      DB.createProduct(product),
-      IMG.storeProductPictures(product.id, pictures)
-    ]);
+    const { insertId } = await DB.createProduct(product);
+    const normalInsertId = Number(insertId);
+
+    await IMG.storeProductPictures(normalInsertId, pictures);
 
     res.json({ insertId: Number(insertId) });
     return;
@@ -52,7 +52,7 @@ apiRouter.post("/createProduct", async (req, res) => {
   }
 });
 
-apiRouter.post("/getStudent", (req, res) => {
+apiRouter.post("/getStudent", async (req, res) => {
   const username = req.body.username;
 
   try {
@@ -68,7 +68,7 @@ apiRouter.post("/getStudent", (req, res) => {
   }
 });
 
-apiRouter.post("/getProduct", (req, res) => {
+apiRouter.post("/getProduct", async (req, res) => {
   const product_id = req.body.product_id;
 
   try {
@@ -85,18 +85,18 @@ apiRouter.post("/getProduct", (req, res) => {
   }
 });
 
-apiRouter.post("/getStudentProducts", (req, res) => {
+apiRouter.post("/getStudentProducts", async (req, res) => {
   const username = req.body.username;
 
   try {
-    const { rawProducts } = await DB.getStudentProducts(username);
-    const products = rawProducts.map(async (p) => {
-      const numberPictures = await IMG.countProductPictures(p.product_id);
+    const { products } = await DB.getStudentProducts(username);
+    const normalProducts = products.map((product) => {
+      const numberPictures = IMG.countProductPictures(product.product_id);
 
-      return { numberPictures, ...p};
+      return { numberPictures, ...product};
     });
 
-    res.json({ products });
+    res.json({ products: normalProducts });
     return;
   } catch (err) {
     console.log(err);
@@ -106,7 +106,7 @@ apiRouter.post("/getStudentProducts", (req, res) => {
   }
 });
 
-apiRouter.post("/getProductWithStudent", (req, res) => {
+apiRouter.post("/getProductWithStudent", async (req, res) => {
   const product_id = req.body.product_id;
 
   try {
