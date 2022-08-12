@@ -26,6 +26,14 @@ const createStudent = (student) => {
   });
 };
 
+const createProduct = (product) => {
+  return fetch(serverURL("/createProduct"), {
+    method: "POST",
+    body: JSON.stringify(product),
+    headers: JSONHeaders
+  });
+};
+
 const storeStudentAvatar = (username, originalFormData) => {
   const [[_, avatar]] = originalFormData.entries();
 
@@ -38,7 +46,27 @@ const storeStudentAvatar = (username, originalFormData) => {
   });
 };
 
+const storeProductPictures = (product_id, originalFormData) => {
+  const formData = new FormData();
+  const entries = originalFormData.entries();
+
+  let index = 0;
+
+  for (const [_, file] of entries) {
+    formData.append(index.toString(), file);
+    index++;
+  }
+
+  formData.append("product_id", product_id);
+
+  return fetch(serverURL("/storeProductPictures"), {
+    method: "POST",
+    body: formData
+  });
+};
+
 export {
   JSONHeaders, serverURL, usernameTaken,
-  createStudent, storeStudentAvatar
+  createStudent, storeStudentAvatar,
+  createProduct, storeProductPictures
 };

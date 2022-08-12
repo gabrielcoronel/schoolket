@@ -1,151 +1,158 @@
 import express from "express";
 import fileUpload from 'express-fileupload';
-import * as db from "./database.js";
-import dirName from "./dirName.js";
-import { existsSync, writeFileSync } from 'node:fs';
+import * as DB from "./database.js";
+import * as IMG from "./image-management.js";
 
-const apiRouter = express.Router();
-
-// Constantes de HTTP
 const HTTP_SUCCESS = 200;
 const HTTP_FAILURE = 400;
 
-const IMAGE_FORMAT = "png";
+const apiRouter = express.Router();
 
-// Middleware para parsear las solicitudes en formato JSON y archivos
 apiRouter.use(express.json());
-apiRouter.use(fileUpload());
+apiRouter.use(fileUpload({ createParentPath: true }));
+apiRouter.use("/productPictures", express.static("../product_pictures"));
+apiRouter.use("/avatar", express.static("../student_avatars"));
 
-async function create(request, response, createFunction) {
-  const body = request.body;
-  console.log(`create: trying to create ${JSON.stringify(body)}`);
+apiRouter.post("/createStudent", async (req, res) => {
+  const [avatar] = Object.values(req.files);
+  const student = req.body;
 
   try {
-    await createFunction(body);
-    console.log(`create: created ${JSON.stringify(body)}`);
+    await Promise.all([
+      DB.createStudent(student),
+      IMG.storeStudentAvatar(avatar)
+    ]);
 
-    response.sendStatus(HTTP_SUCCESS);
-    return;
+    res.json(HTTP_SUCCESS);
   } catch (err) {
-    console.log(`create: failed to create ${JSON.stringify(body)}`);
     console.log(err);
 
-    response.sendStatus(HTTP_FAILURE);
+    res.sendStatus(HTTP_FAILURE);
     return;
   }
-}
-
-async function get(request, response, idKey, getFunction) {
-  console.log(`get: trying to get ${idKey}`);
-
-  const idValue = request.body[idKey];
-  console.log(`get: got ${idValue}`);
-
-  console.log(`get: trying to retrieve data from database`);
-  try {
-    const object = await getFunction(idValue);
-    console.log(`get: retrieved ${JSON.stringify(object)}`);
-
-    response.json(object);
-    return;
-  } catch (err) {
-    console.log(`get: failed at retrieving data from database`);
-    console.log(err);
-
-    response.sendStatus(HTTP_FAILURE);
-    return;
-  }
-}
-
-async function exists(request, response, idKey, existsFunction) {
-  console.log(`exists: trying to read ${idKey}`);
-
-  const idValue = request.body[idKey];
-  console.log(`exists: read ${idValue}`)
-
-  console.log(`exists: trying to check ${idValue}`)
-  try {
-    const result = await existsFunction(idValue);
-    console.log(`exists: got ${result}`)
-
-    response.json(result);
-    return
-  } catch (err) {
-    console.log(`exists: failed to check ${idValue}`);
-    console.log(err);
-
-    response.sendStatus(HTTP_FAILURE);
-    return;
-  }
-}
-
-apiRouter.post("/createStudent", (req, res) => {
-  create(req, res, db.createStudent);
 });
 
-apiRouter.post("/createProduct", (req, res) => {
-  create(req, res, db.createProduct);
+apiRouter.post("/createProduct", async (req, res) => {
+  const pictures = Object.values(req.files);
+  const product = req.body;
+
+  try {
+    const [{ insertId }] = await Promise.all([
+      DB.createProduct(product),
+      IMG.storeProductPictures(product.id, pictures)
+    ]);
+
+    res.json({ insertId: Number(insertId) });
+    return;
+  } catch (err) {
+    console.log(err);
+
+    res.sendStatus(HTTP_FAILURE);
+    return;
+  }
 });
 
 apiRouter.post("/getStudent", (req, res) => {
-  get(req, res, "username", db.getStudent);
-});
-
-apiRouter.post("/getProduct", (req, res) => {
-  get(req, res, "product_id", db.getProduct);
-});
-
-apiRouter.post("/getStudentProducts", (req, res) => {
-  get(req, res, "username", db.getStudentProducts);
-});
-
-apiRouter.post("/getProductWithStudent", (req, res) => {
-  get(req, res, "product_id", db.getProductWithStudent);
-});
-
-apiRouter.post("/existsStudent", (req, res) => {
-  exists(req, res, "username", db.existsStudent);
-})
-
-apiRouter.post("/existsProduct", (req, res) => {
-  exists(req, res, "product_id", db.existsProduct);
-});
-
-apiRouter.post("/getStudentAvatar", (req, res) => {
   const username = req.body.username;
-  const base = "/img/avatar";
-  const url = `${base}/${username}.${IMAGE_FORMAT}`;
 
-  console.log("getStudentAvatar");
-  console.table({ username, base, url });
+  try {
+    const student = await DB.getStudent(username);
 
-  if (existsSync(url)) {
-    res.json({
-      url: url
-    });
-
-    console.log("getStudentAvatar: file exists");
+    res.json(student);
     return;
-  } else {
-    res.sendStatus(HTTP_FAILURE);
+  } catch (err) {
+    console.log(err);
 
-    console.log("getStudentAvatar: file doesn't exist");
+    res.sendStatus(HTTP_FAILURE);
     return;
   }
 });
 
-apiRouter.post("/storeStudentAvatar", async (req, res) => {
-  const [username] = Object.keys(req.files);
-  const [avatar] = Object.values(req.files);
-  const path = `${dirName}/../student_avatars/${username}.${IMAGE_FORMAT}`;
+apiRouter.post("/getProduct", (req, res) => {
+  const product_id = req.body.product_id;
 
-  console.log("/storeStudentAvatar: trying to store an avatar");
-  console.log(path);
-  console.log(avatar);
+  try {
+    const product = await DB.getProduct(product_id);
+    const numberPictures = await IMG.countProductPictures(product_id);
 
-  await avatar.mv(path);
+    res.json({ numberPictures, ...product });
+    return;
+  } catch (err) {
+    console.log(err);
 
-  res.sendStatus(HTTP_SUCCESS);
+    res.sendStatus(HTTP_FAILURE);
+    return;
+  }
+});
+
+apiRouter.post("/getStudentProducts", (req, res) => {
+  const username = req.body.username;
+
+  try {
+    const { rawProducts } = await DB.getStudentProducts(username);
+    const products = rawProducts.map(async (p) => {
+      const numberPictures = await IMG.countProductPictures(p.product_id);
+
+      return { numberPictures, ...p};
+    });
+
+    res.json({ products });
+    return;
+  } catch (err) {
+    console.log(err);
+
+    res.sendStatus(HTTP_FAILURE);
+    return;
+  }
+});
+
+apiRouter.post("/getProductWithStudent", (req, res) => {
+  const product_id = req.body.product_id;
+
+  try {
+    const view = await DB.getProductWithStudent(product_id);
+    const numberPictures = await IMG.countProductPictures(product_id);
+
+    res.json({ numberPictures, ...view });
+    return;
+  } catch (err) {
+    console.log(err);
+
+    res.sendStatus(HTTP_FAILURE);
+    return;
+  }
+});
+
+apiRouter.post("/existsStudent", async (req, res) => {
+  const username = req.body.username;
+
+  try {
+    const exists = await DB.existsStudent(username);
+
+    res.json(exists);
+    return;
+  } catch (err) {
+    console.log(err);
+
+    res.sendStatus(HTTP_FAILURE);
+    return;
+  }
+})
+
+apiRouter.post("/existsProduct", async (req, res) => {
+  const product_id = req.body.product_id;
+
+  try {
+    const exists = await DB.existsProduct(product_id);
+
+    res.json(exists);
+    return;
+  } catch (err) {
+    console.log(err);
+
+    res.sendStatus(HTTP_FAILURE);
+    return;
+  }
 });
 
 export default apiRouter;
