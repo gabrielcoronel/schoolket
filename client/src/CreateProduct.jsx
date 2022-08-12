@@ -1,6 +1,6 @@
 import * as Formik from 'formik';
 import * as Yup from 'yup';
-import { Field, FileChooser } from './components';
+import { Field, TextArea, FileChooser } from './components';
 import { regularField } from './util/validation-schemas.js';
 import { createProduct } from './util/server-util.js';
 
@@ -62,7 +62,7 @@ const CreateProductForm = ({
             type="text"
           />
 
-          <Field
+          <TextArea
             updateErrorMessage={updateErrorMessage}
             isSubmitting={isSubmitting}
             name="description"

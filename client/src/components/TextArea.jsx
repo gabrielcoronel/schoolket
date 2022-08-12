@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import * as Formik from 'formik';
 
-const Field = ({
+const TextArea = ({
   label, className,
   updateErrorMessage,
   isSubmitting,
@@ -18,7 +18,7 @@ const Field = ({
     <label className={className}>
       {label}
 
-      <input
+      <textarea
         {...field}
         {...props}
       />
@@ -26,4 +26,4 @@ const Field = ({
   );
 };
 
-export default Field;
+export default TextArea;
