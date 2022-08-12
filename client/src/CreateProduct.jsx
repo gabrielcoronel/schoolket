@@ -2,7 +2,7 @@ import * as Formik from 'formik';
 import * as Yup from 'yup';
 import { Field, FileChooser } from './components';
 import { regularField } from './util/validation-schemas.js';
-import { createProduct, storeProductPictures } from './util/server-util.js';
+import { createProduct } from './util/server-util.js';
 
 const CreateProductForm = ({
   username, updateErrorMessage
@@ -22,28 +22,18 @@ const CreateProductForm = ({
         price: Yup.number()
           .required("Tienes que ponerle un precio a tu producto")
           .integer("El precio solo puede ser una cantidad entera")
-          .positive("No existen los precios negativos")
+          .positive("No existen los precios negativos"),
+        files: Yup.mixed().required("Tienes que añadir por lo menos una imagen de tu producto")
       })}
-      onSubmit={async ({ files, price, ...productValues }, { setSubmitting, resetForm }) => {
+      onSubmit={async ({ files, ...product }, { setSubmitting, resetForm }) => {
         try {
-          const response = await createProduct({
-            username,
-            price: price.toString(),
-            ...productValues
-          });
-
-          if (files !== null && files !== undefined) {
-            const { insertId } = await response.json();
-
-            await storeProductPictures(insertId, files);
-          }
+          await createProduct({ username, ...product}, files);
         } catch (err) {
           updateErrorMessage("Algo salió mal");
+
           setSubmitting(false);
           return;
         }
-
-        console.log("negrooo");
 
         resetForm();
         setSubmitting(false);
@@ -99,7 +89,7 @@ const CreateProductForm = ({
 const CreateProduct = () => {
   return (
     <div>
-      <CreateProductForm updateErrorMessage={(message) => console.log(message)} username="gabriel"/>
+      <CreateProductForm updateErrorMessage={(message) => console.log(message)} username="lucho"/>
     </div>
   );
 };

@@ -7,8 +7,8 @@ import { Field, FileChooser, ErrorBox } from './components';
 import { regularField, phoneNumberField } from './util/validation-schemas.js';
 
 import {
-  JSONHeaders, serverURL, usernameTaken,
-  createStudent, storeStudentAvatar
+  JSONHeaders, serverURL,
+  usernameTaken, createStudent
 } from './util/server-util.js';
 
 const SignUpForm = ({ updateErrorMessage }) => {
@@ -43,10 +43,7 @@ const SignUpForm = ({ updateErrorMessage }) => {
         }
 
         try {
-          await Promise.all([
-            createStudent(student),
-            storeStudentAvatar(student.username, files)
-          ]);
+          await createStudent(student, files);
         } catch (err) {
           updateErrorMessage("Algo salió mal");
           setSubmitting(false);

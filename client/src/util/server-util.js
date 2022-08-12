@@ -6,6 +6,32 @@ const JSONHeaders = new Headers({
 
 const serverURL = (route) => serverRoot + route;
 
+const objectToFormData = (obj) => {
+  const formData = new FormData();
+
+  for (const [key, value] of Object.entries(obj))
+    formData.append(key, value);
+
+  return formData;
+};
+
+const arrayToIDMap = (arr) => {
+  const IDMap = {};
+  let ID = 0;
+
+  for (const e of arr) {
+    IDMap[`${ID}`] = e;
+    ID++;
+  }
+
+  return IDMap;
+};
+
+const logFormData = (formData) => {
+  for (const [key, value] of formData.entries())
+    console.log(key, value);
+};
+
 const usernameTaken = async (username) => {
   const response = await fetch(serverURL("/existsStudent"), {
     method: "POST",
@@ -16,57 +42,32 @@ const usernameTaken = async (username) => {
   return response.exists;
 };
 
-const createStudent = (student) => {
+const createStudent = (student, formData) => {
   const reputation = 25;
+  const [avatar] = formData.values();
+  const requestFormData = objectToFormData({ avatar, reputation, ...student});
 
   return fetch(serverURL("/createStudent"), {
     method: "POST",
-    body: JSON.stringify({ reputation, ...student }),
-    headers: JSONHeaders
+    body: requestFormData
   });
 };
 
-const createProduct = (product) => {
+const createProduct = (product, formData) => {
+  const pictures = formData.values();
+  const picturesIDMap = arrayToIDMap(pictures);
+  const requestFormData = objectToFormData({
+    ...product,
+    ...picturesIDMap
+  });
+
   return fetch(serverURL("/createProduct"), {
     method: "POST",
-    body: JSON.stringify(product),
-    headers: JSONHeaders
-  });
-};
-
-const storeStudentAvatar = (username, originalFormData) => {
-  const [[_, avatar]] = originalFormData.entries();
-
-  const formData = new FormData();
-  formData.append(username, avatar);
-
-  return fetch(serverURL("/storeStudentAvatar"), {
-    method: "POST",
-    body: formData
-  });
-};
-
-const storeProductPictures = (product_id, originalFormData) => {
-  const formData = new FormData();
-  const entries = originalFormData.entries();
-
-  let index = 0;
-
-  for (const [_, file] of entries) {
-    formData.append(index.toString(), file);
-    index++;
-  }
-
-  formData.append("product_id", product_id);
-
-  return fetch(serverURL("/storeProductPictures"), {
-    method: "POST",
-    body: formData
+    body: requestFormData
   });
 };
 
 export {
   JSONHeaders, serverURL, usernameTaken,
-  createStudent, storeStudentAvatar,
-  createProduct, storeProductPictures
+  createStudent, createProduct
 };
