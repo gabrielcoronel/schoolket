@@ -6,10 +6,14 @@ import './LogIn.css';
 import { Field, FileChooser, ErrorBox } from './components';
 import { regularField, phoneNumberField } from './util/validation-schemas.js';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
+
 import {
   JSONHeaders, serverURL,
   usernameTaken, createStudent
 } from './util/server-util.js';
+import { classNames } from './util/react-util.js';
 
 const SignUpForm = ({ updateErrorMessage }) => {
   return (
@@ -59,63 +63,86 @@ const SignUpForm = ({ updateErrorMessage }) => {
       {({
         isSubmitting, setFieldValue
       }) => (
-        <Formik.Form className={null}>
-          <FileChooser
-            updateFormData={(formData) => {
-              setFieldValue("files", formData);
-            }}
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="files"
-            label="Seleccionar avatar"
-            accept="image/*"
-            multiple={false}
-          />
+        <Formik.Form className="form">
+          <div className="FileChooser-wrapper">
+            <FileChooser
+              className="accented-button FileChooser-avatar"
+              updateFormData={(formData) => {
+                setFieldValue("files", formData);
+              }}
+              updateErrorMessage={updateErrorMessage}
+              isSubmitting={isSubmitting}
+              name="files"
+              label={
+                <span>
+                  <FontAwesomeIcon icon={faArrowUpFromBracket}/>
+                  &nbsp;Selecciona un avatar
+                </span>
+              }
+              accept="image/*"
+              multiple={false}
+            />
+          </div>
 
-          <Field
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="username"
-            label="Nombre de usuario"
-            type="text"
-          />
-          <Field
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="name"
-            label="Nombre"
-            type="text"
-          />
-          <Field
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="surname1"
-            label="Primer apellido"
-            type="text"
-          />
-          <Field
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="surname2"
-            label="Segundo apellido"
-            type="text"
-          />
-          <Field
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="phone_number"
-            label="Número de teléfono"
-            type="tel"
-          />
-          <Field
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="password"
-            label="Contraseña"
-            type="password"
-          />
+          <div className="Field-wrapper">
+            <div>
+              <Field
+                className="Field"
+                updateErrorMessage={updateErrorMessage}
+                isSubmitting={isSubmitting}
+                name="username"
+                label="Nombre de usuario"
+                type="text"
+              />
+              <Field
+                className="Field"
+                updateErrorMessage={updateErrorMessage}
+                isSubmitting={isSubmitting}
+                name="name"
+                label="Nombre"
+                type="text"
+              />
+              <Field
+                className="Field"
+                updateErrorMessage={updateErrorMessage}
+                isSubmitting={isSubmitting}
+                name="surname1"
+                label="Primer apellido"
+                type="text"
+              />
+              <Field
+                className="Field"
+                updateErrorMessage={updateErrorMessage}
+                isSubmitting={isSubmitting}
+                name="surname2"
+                label="Segundo apellido"
+                type="text"
+              />
+              <Field
+                className="Field"
+                updateErrorMessage={updateErrorMessage}
+                isSubmitting={isSubmitting}
+                name="phone_number"
+                label="Número de teléfono"
+                type="tel"
+              />
+              <Field
+                className="Field"
+                updateErrorMessage={updateErrorMessage}
+                isSubmitting={isSubmitting}
+                name="password"
+                label="Contraseña"
+                type="password"
+              />
+            </div>
+          </div>
 
-          <button type="submit">Crear cuenta</button>
+          <button
+            className="accented-button submit-button"
+            type="submit"
+          >
+            Crear cuenta
+          </button>
         </Formik.Form>
       )}
     </Formik.Formik>
@@ -172,24 +199,35 @@ const SignInForm = ({ updateErrorMessage }) => {
       }}
     >
       {({ isSubmitting }) => (
-        <Formik.Form className={null}>
-          <Field
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="username"
-            label="Nombre de usuario"
-            type="text"
-          />
+        <Formik.Form className="form">
+          <div className="Field-wrapper">
+            <div>
+              <Field
+                className="Field"
+                updateErrorMessage={updateErrorMessage}
+                isSubmitting={isSubmitting}
+                name="username"
+                label="Nombre de usuario"
+                type="text"
+              />
 
-          <Field
-            updateErrorMessage={updateErrorMessage}
-            isSubmitting={isSubmitting}
-            name="password"
-            label="Contraseña"
-            type="password"
-          />
+              <Field
+                className="Field"
+                updateErrorMessage={updateErrorMessage}
+                isSubmitting={isSubmitting}
+                name="password"
+                label="Contraseña"
+                type="password"
+              />
+            </div>
+          </div>
 
-          <button type="submit">Iniciar sesión</button>
+          <button
+            className="accented-button submit-button"
+            type="submit"
+          >
+            Iniciar sesión
+          </button>
         </Formik.Form>
       )}
     </Formik.Formik>
@@ -199,17 +237,25 @@ const SignInForm = ({ updateErrorMessage }) => {
 const ModeSelect = ({
   isSigningUp, updateIsSigningUp
 }) => {
+  const baseClasses = ["accented-button", "ModeSelect-button"];
+  const signUpClasses = baseClasses.concat([
+    (isSigningUp ? "ModeSelect-selected" : null)
+  ]);
+  const signInClasses = baseClasses.concat([
+    (!isSigningUp ? "ModeSelect-selected" : null)
+  ]);
+
   return (
     <div>
       <button
-        className={null}
+        className={classNames(signUpClasses)}
         onClick={() => updateIsSigningUp(true)}
       >
         Crear Cuenta
       </button>
 
       <button
-        className={null}
+        className={classNames(signInClasses)}
         onClick={() => updateIsSigningUp(false)}
       >
         Iniciar sesión
@@ -222,7 +268,7 @@ const FormBox = ({ updateErrorMessage }) => {
   const [isSigningUp, setIsSigningUp] = useState(true);
 
   return (
-    <div>
+    <div className="FormBox">
       <ModeSelect
         isSigningUp={isSigningUp}
         updateIsSigningUp={setIsSigningUp}
@@ -243,10 +289,15 @@ const FormBox = ({ updateErrorMessage }) => {
 
 const LogIn = () => {
   const [errorMessage, setErrorMessage] = useState("");
+  const errorBoxClassName = classNames([
+    ( !errorMessage ? "invisible" : null),
+    "ErrorBox"
+  ]);
 
   return (
-    <div>
+    <div className="LogIn">
       <ErrorBox
+        className={errorBoxClassName}
         message={errorMessage}
         updateErrorMessage={setErrorMessage}
       />

@@ -39,7 +39,9 @@ const usernameTaken = async (username) => {
     headers: JSONHeaders
   });
 
-  return response.exists;
+  const json = await response.json();
+
+  return json.exists;
 };
 
 const createStudent = (student, formData) => {

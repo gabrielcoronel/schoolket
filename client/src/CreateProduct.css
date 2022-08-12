@@ -8,6 +8,29 @@
   display: none;
 }
 
+.ErrorBox {
+  background-color: white;
+  color: var(--error-color);
+
+  font-size: 15px;
+  text-align: center;
+}
+
+.ErrorBox button {
+  background-color: white;
+  color: var(--error-color);
+
+  border-style: none;
+  border-radius: 50%;
+
+  font-size: 18px;
+}
+
+.ErrorBox button:hover {
+  background-color: var(--error-color);
+  color: white;
+}
+
 .accented-button {
   background-color: var(--accent-color);
   color: white;
@@ -19,17 +42,65 @@
 
   padding: 5px;
 
-  width: 100%;
+  margin: auto;
 }
 
-.LogIn {
-  font-family: 'Roboto', sans-serif;
+.submit-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
 
-  border: solid 1px silver;
+  margin: 5px;
+}
 
-  width: 20%;
+.FileChooser-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
 
-  margin: auto;
+.FileChooser-product {
+  border-style: none;
+  border-radius: var(--border-radius);
+  border-color: white;
+
+  padding: 5px;
+
+  font-size: 15px;
+}
+
+.Field {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.Field input {
+  border: 1px solid black;
+  border-radius: 0;
+}
+
+.Field textarea {
+  border: 1px solid black;
+  border-radius: 0;
+  resize: none;
+}
+
+.Field-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.Field-wrapper div {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: flex-start;
 }
 
 .ErrorBox {
@@ -55,58 +126,11 @@
   color: white;
 }
 
-.FileChooser-wrapper {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-}
+.CreateProduct {
+  font-family: 'Roboto', sans-serif;
 
-.FileChooser-avatar {
-  border-style: none;
-  border-radius: var(--border-radius);
-  border-color: white;
+  width: 40%;
+  margin: auto;
 
-  padding: 5px;
-
-  font-size: 15px;
-}
-
-.ModeSelect-button {
-  padding: 5px;
-
-  border-style: none;
-
-  width: 50%;
-}
-
-.ModeSelect-selected {
-  background-color: white;
-  color: var(--accent-color);
-}
-
-.Field {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.Field input {
-  border: 1px solid black;
-  border-radius: 0;
-}
-
-.Field-wrapper {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.Field-wrapper div {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-around;
-  align-items: flex-start;
+  border: 1px solid silver;
 }

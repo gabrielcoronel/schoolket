@@ -16,8 +16,10 @@ const FileChooser = ({
   }, [meta.error, isSubmitting, updateErrorMessage]);
 
   return (
-    <div className={className}>
-      <button type="button"
+    <div>
+      <button
+        className={className}
+        type="button"
         onClick={() => {
           if (fileInput.current)
             fileInput.current.click();

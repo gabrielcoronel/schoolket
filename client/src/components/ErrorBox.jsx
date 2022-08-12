@@ -1,11 +1,14 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+
 const ErrorBox = ({
   message, updateErrorMessage,
-  className, buttonLabel
+  className
 }) => {
   return (
     <div className={className}>
       <button onClick={() => updateErrorMessage("")}>
-        {buttonLabel}
+        <FontAwesomeIcon icon={faXmark}/>
       </button>
 
       <span>
