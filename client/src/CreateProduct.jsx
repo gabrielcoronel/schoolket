@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import { Field, TextArea, FileChooser, ErrorBox } from './components';
 import { regularField } from './util/validation-schemas.js';
 import { createProduct } from './util/server-util.js';
-import './CreateProduct.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { classNames } from './util/react-util.js';

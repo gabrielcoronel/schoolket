@@ -2,9 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import LogIn from './LogIn.jsx';
 import CreateProduct from './CreateProduct.jsx';
+import './tailwind.css';
 
 import { useState, useEffect } from 'react';
-import './index.css';
 
 const useCounter = (start) => {
   const [count, setCount] = useState(start);

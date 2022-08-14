@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import * as Formik from 'formik';
 import * as Yup from 'yup';
-import './LogIn.css';
 
 import { Field, FileChooser, ErrorBox } from './components';
 import { regularField, phoneNumberField } from './util/validation-schemas.js';
