@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { useField } from 'formik';
+import { useRef } from 'react';
+import { useFieldListener } from '../hooks';
 
 const FileChooser = ({
   label, updateFormData,
@@ -8,12 +8,7 @@ const FileChooser = ({
   isSubmitting, ...props
 }) => {
   const fileInput = useRef(null);
-  const [_, meta] = useField({ ...props });
-
-  useEffect(() => {
-    if (isSubmitting && meta.error !== undefined)
-      updateErrorMessage(meta.error);
-  }, [meta.error, isSubmitting, updateErrorMessage]);
+  const field = useFieldListener({ isSubmitting, updateErrorMessage, ...props });
 
   return (
     <div>

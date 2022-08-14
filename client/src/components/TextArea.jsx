@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import * as Formik from 'formik';
+import { useFieldListener } from '../hooks';
 
 const TextArea = ({
   label, className,
@@ -7,12 +6,7 @@ const TextArea = ({
   isSubmitting,
   ...props
 }) => {
-  const [field, meta] = Formik.useField({ ...props });
-
-  useEffect(() => {
-    if (isSubmitting && meta.error !== undefined)
-      updateErrorMessage(meta.error);
-  }, [meta.error, isSubmitting, updateErrorMessage]);
+  const field = useFieldListener({ isSubmitting, updateErrorMessage, ...props });
 
   return (
     <label className={className}>
