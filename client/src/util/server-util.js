@@ -69,7 +69,22 @@ const createProduct = (product, formData) => {
   });
 };
 
+const getStudent = async (username) => {
+  const response = await fetch(serverURL("/getStudent"), {
+    method: "POST",
+    body: JSON.stringify({ username }),
+    headers: JSONHeaders
+  });
+  const json = await response.json();
+
+  return json;
+};
+
+const getStudentAvatarURL = (username) =>
+  `${serverURL("/avatar")}/${username}.png`;
+
 export {
   JSONHeaders, serverURL, usernameTaken,
-  createStudent, createProduct
+  createStudent, createProduct,
+  getStudent, getStudentAvatarURL
 };

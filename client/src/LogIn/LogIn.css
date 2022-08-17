@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .ModeButton {
+    @apply bg-blue-800 text-white rounded-none px-2 py-0.5;
+    @apply w-1/2;
+  }
+
+  .ModeButton-selected {
+    @apply bg-blue-900;
+  }
+}

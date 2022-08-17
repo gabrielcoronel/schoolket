@@ -11,7 +11,7 @@ const apiRouter = express.Router();
 apiRouter.use(express.json());
 apiRouter.use(fileUpload({ createParentPath: true }));
 apiRouter.use("/productPictures", express.static("../product_pictures"));
-apiRouter.use("/avatar", express.static("../student_avatars"));
+apiRouter.use("/avatar", express.static("/home/gabriel/projects/expotec/server/student_avatars"));
 
 apiRouter.post("/createStudent", async (req, res) => {
   const [avatar] = Object.values(req.files);

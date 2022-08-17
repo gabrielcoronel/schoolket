@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .ErrorBox {
+    @apply bg-red-50 text-red-600 text-center shadow-xl;
+    @apply flex flex-row justify-center items-center h-10 mb-3;
+  }
+
+  .ErrorBox button {
+    @apply rounded-full w-6 h-6;
+  }
+
+  .ErrorBox button:hover {
+    @apply bg-red-600 text-white;
+  }
+
+  .Field {
+    @apply flex flex-col justify-evenly items-start;
+    @apply text-black font-bold;
+  }
+
+  .Field input {
+    @apply border-black border;
+    @apply font-normal;
+  }
+
+  .Field textarea {
+    @apply border-black border resize-none;
+    @apply font-normal;
+  }
+
+  .Button {
+    @apply bg-blue-800 text-white rounded-full px-2 py-0.5 !important;
+    @apply hover:bg-blue-900 !important;
+  }
+}

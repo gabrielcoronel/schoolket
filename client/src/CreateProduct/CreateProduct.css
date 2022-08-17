@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .title {
+    @apply col-start-1 col-end-4;
+  }
+
+  .title input {
+    @apply w-full;
+  }
+
+  .price {
+    @apply col-start-4 col-end-5;
+  }
+
+  .price input {
+    @apply w-full;
+  }
+
+  .description {
+    @apply row-start-2 col-start-1 col-end-5;
+  }
+
+  .description textarea {
+    @apply w-full h-24;
+  }
+}
