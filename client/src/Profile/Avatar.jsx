@@ -1,7 +1,7 @@
 const Avatar = ({ url }) => {
   return (
     <img
-      className="rounded-full w-40 h-40"
+      className="border-2 border-blue-800 rounded-full w-40 h-40"
       src={url}
       alt=''
     />
