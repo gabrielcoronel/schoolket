@@ -80,11 +80,32 @@ const getStudent = async (username) => {
   return json;
 };
 
+const getProductWithStudent = async (product_id) => {
+  const response = await fetch(serverURL("/getProductWithStudent"), {
+    method: "POST",
+    body: JSON.stringify({ product_id }),
+    headers: JSONHeaders
+  });
+  const json = await response.json();
+
+  return json;
+};
+
 const getStudentAvatarURL = (username) =>
   `${serverURL("/avatar")}/${username}.png`;
+
+const getProductPictureURLs = (product_id, numberPictures) => {
+  const dummyArray = new Array(numberPictures).fill(null);
+  const productPictureURLs = dummyArray.map((_, index) => {
+    return `${serverURL("/productPictures")}/${product_id}/${index}.png`
+  });
+
+  return productPictureURLs;
+};
 
 export {
   JSONHeaders, serverURL, usernameTaken,
   createStudent, createProduct,
-  getStudent, getStudentAvatarURL
+  getStudent, getStudentAvatarURL,
+  getProductWithStudent, getProductPictureURLs
 };

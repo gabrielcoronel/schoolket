@@ -2,7 +2,6 @@ import React from 'react';
 import * as FormComponents from '../form-components';
 import FormBox from './FormBox.jsx';
 
-import '../styles/forms.css';
 import './LogIn.css';
 
 const LogIn = () => {

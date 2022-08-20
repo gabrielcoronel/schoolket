@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import useAsync from '../hooks/useAsync.js';
 import * as Server from '../util/server-util.js';
 import Avatar from './Avatar.jsx';
 import Data from './Data.jsx';
@@ -6,12 +6,7 @@ import './Profile.css';
 
 const Profile = ({ username }) => {
   const avatarURL = Server.getStudentAvatarURL(username);
-  const [student, setStudent] = useState(null);
-
-  useEffect(() => {
-    Server.getStudent(username)
-      .then((responseStudent) => setStudent(responseStudent));
-  }, []);
+  const student = useAsync(() => Server.getStudent(username));
 
   if (student === null)
     return (

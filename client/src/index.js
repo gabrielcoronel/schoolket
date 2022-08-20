@@ -1,15 +1,10 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
-import LogIn from './LogIn/LogIn.jsx';
-import CreateProduct from './CreateProduct/CreateProduct.jsx';
-import Profile from './Profile/Profile.jsx';
+import Product from './Product/Product.jsx';
 
 const root = ReactDOM.createRoot(
   document.querySelector("#root")
 );
 
 root.render(
-  <div>
-    <Profile username={"serviceman"}/>
-  </div>
+  <Product product_id={3} />
 );

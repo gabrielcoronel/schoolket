@@ -10,7 +10,7 @@ const apiRouter = express.Router();
 
 apiRouter.use(express.json());
 apiRouter.use(fileUpload({ createParentPath: true }));
-apiRouter.use("/productPictures", express.static("../product_pictures"));
+apiRouter.use("/productPictures", express.static("/home/gabriel/projects/expotec/server/product_pictures"));
 apiRouter.use("/avatar", express.static("/home/gabriel/projects/expotec/server/student_avatars"));
 
 apiRouter.post("/createStudent", async (req, res) => {
@@ -111,7 +111,7 @@ apiRouter.post("/getProductWithStudent", async (req, res) => {
 
   try {
     const view = await DB.getProductWithStudent(product_id);
-    const numberPictures = await IMG.countProductPictures(product_id);
+    const numberPictures = IMG.countProductPictures(product_id);
 
     res.json({ numberPictures, ...view });
     return;

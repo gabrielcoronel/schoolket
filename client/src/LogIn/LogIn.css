@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("../styles/general.css");
+@import url("../styles/forms.css");
+
 @layer components {
   .ModeButton {
     @apply bg-blue-800 text-white rounded-none px-2 py-0.5;

@@ -46,18 +46,15 @@ function generateInsertQuery(tableName, object) {
   return query;
 }
 
-function cloneObject(object) {
-  return JSON.parse(JSON.stringify(object));
-}
-
 function joinProductWithStudent(product, student) {
-  const productCopy = cloneObject(product);
-  const studentCopy = cloneObject(student);
+  const { username, ...cleanProduct } = product;
 
-  delete productCopy.username;
-  productCopy.student = studentCopy;
+  const view = {
+    student: { ...student },
+    ...cleanProduct
+  };
 
-  return productCopy;
+  return view;
 }
 
 async function insert(tableName, object, errorMessage) {

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("../styles/general.css");
+@import url("../styles/forms.css");
+
 @layer components {
   .title {
     @apply col-start-1 col-end-4;

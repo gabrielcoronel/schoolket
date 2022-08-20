@@ -30,9 +30,4 @@
     @apply border-black border resize-none;
     @apply font-normal;
   }
-
-  .Button {
-    @apply bg-blue-800 text-white rounded-full px-2 py-0.5 !important;
-    @apply hover:bg-blue-900 !important;
-  }
 }

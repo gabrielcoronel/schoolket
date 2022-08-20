@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .Carousel-button {
+    @apply w-1/12 h-full;
+    @apply bg-blue-800 text-white font-bold;
+    @apply hover:bg-blue-900;
+  }
+}

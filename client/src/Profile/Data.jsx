@@ -1,4 +1,7 @@
 import DataField from "./DataField.jsx";
+import { Stars } from "../general-components";
+
+const NUMBER_OF_STARS = 5;
 
 const Data = ({ student }) => {
   return (
@@ -34,7 +37,7 @@ const Data = ({ student }) => {
       <div className="row-start-3 row-end-4 col-start-1 col-end-4">
         <DataField
           label="Reputación"
-          data={student.reputation}
+          data={<Stars number={student.reputation / NUMBER_OF_STARS} />}
         />
       </div>
 
