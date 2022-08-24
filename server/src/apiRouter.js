@@ -123,6 +123,13 @@ apiRouter.post("/getProductWithStudent", async (req, res) => {
   }
 });
 
+// CUIDADO: Esta es GET
+apiRouter.get("/getAllProducts", async (req, res) => {
+  const products = await DB.getAllProducts();
+
+  res.json(products);
+});
+
 apiRouter.post("/existsStudent", async (req, res) => {
   const username = req.body.username;
 

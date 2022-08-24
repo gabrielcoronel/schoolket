@@ -1,10 +1,10 @@
 import ReactDOM from 'react-dom/client'
-import LogIn from './LogIn/LogIn.jsx';
+import AllProducts from './AllProducts/AllProducts.jsx';
 
 const root = ReactDOM.createRoot(
   document.querySelector("#root")
 );
 
 root.render(
-  <LogIn />
+  <AllProducts />
 );

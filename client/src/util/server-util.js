@@ -59,7 +59,7 @@ const phoneNumberTaken = async (phone_number) => {
 const createStudent = (student, formData) => {
   const reputation = 25;
   const [avatar] = formData.values();
-  const requestFormData = objectToFormData({ avatar, reputation, ...student});
+  const requestFormData = objectToFormData({ avatar, reputation, ...student });
 
   return fetch(serverURL("/createStudent"), {
     method: "POST",
@@ -79,6 +79,17 @@ const createProduct = (product, formData) => {
     method: "POST",
     body: requestFormData
   });
+};
+
+// CUIDADO: Esta es GET
+const getAllProducts = async () => {
+  const response = await fetch(serverURL("/getAllProducts"), {
+    method: "GET",
+    headers: JSONHeaders
+  });
+  const json = await response.json();
+
+  return json;
 };
 
 const getStudent = async (username) => {
@@ -115,9 +126,14 @@ const getProductPictureURLs = (product_id, numberPictures) => {
   return productPictureURLs;
 };
 
+const getProductFirstPictureURL = (product_id) => {
+  return `${serverURL("/productPictures")}/${product_id}/${0}.png`
+}
+
 export {
   JSONHeaders, serverURL, usernameTaken, phoneNumberTaken,
   createStudent, createProduct,
-  getStudent, getStudentAvatarURL,
-  getProductWithStudent, getProductPictureURLs
+  getStudent, getStudentAvatarURL, getAllProducts,
+  getProductWithStudent, getProductPictureURLs,
+  getProductFirstPictureURL
 };

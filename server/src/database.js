@@ -171,6 +171,16 @@ async function getProductWithStudent(product_id) {
   return view;
 }
 
+async function getAllProducts() {
+  const query = `
+    SELECT product_id, title, description, price
+    FROM ${PRODUCT_TABLE_NAME}
+  `;
+  const result = await pool.query(query);
+
+  return { products: result };
+}
+
 async function existsStudent(username) {
   const result = await exists(
     STUDENT_TABLE_NAME, "username", username, "Failed to check if the student existed"
@@ -197,6 +207,7 @@ async function existsProduct(product_id) {
 
 export {
   createStudent, createProduct,
-  getStudent, getProduct, getStudentProducts, getProductWithStudent,
+  getStudent, getProduct, getStudentProducts,
+  getProductWithStudent, getAllProducts,
   existsStudent, existsProduct, existsPhoneNumber
 };
