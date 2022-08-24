@@ -8,7 +8,7 @@ CREATE TABLE student (
   surname1 		VARCHAR(100) 	NOT NULL,
   surname2 		VARCHAR(100) 	NOT NULL,
   reputation 		INT 		NOT NULL,
-  phone_number 		CHAR(8) 	NOT NULL
+  phone_number 		CHAR(8) 	NOT NULL UNIQUE
 );
 
 CREATE TABLE product (

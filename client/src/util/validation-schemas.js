@@ -19,7 +19,8 @@ const phoneNumberField = Yup.string()
   .trim()
   .required("El campo 'número de télefono' es obligatorio")
   .matches(/^\d+$/, "El número de teléfeno solo puede contener dígitos")
-  .length(8, "El número de teléfono tiene que tener 8 dígitos");
+  .length(8, "El número de teléfono tiene que tener 8 dígitos")
+  .matches(/^[5678]/, "Los números de teléfono empiezan con algún digito del 5 al 8");
 
 const signUpForm = Yup.object({
   username: regularField("nombre de usuario"),

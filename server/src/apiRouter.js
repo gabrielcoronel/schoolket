@@ -137,7 +137,14 @@ apiRouter.post("/existsStudent", async (req, res) => {
     res.sendStatus(HTTP_FAILURE);
     return;
   }
-})
+});
+
+apiRouter.post("/existsPhoneNumber", async (req, res) => {
+  const phone_number = req.body.phone_number;
+  const exists = await DB.existsPhoneNumber(phone_number);
+
+  res.json(exists);
+});
 
 apiRouter.post("/existsProduct", async (req, res) => {
   const product_id = req.body.product_id;

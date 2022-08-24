@@ -1,7 +1,7 @@
 import * as Formik from 'formik';
 import * as FormComponents from '../form-components';
 import * as Validation from '../util/validation-schemas.js';
-import { usernameTaken, createStudent } from '../util/server-util.js';
+import { usernameTaken, phoneNumberTaken, createStudent } from '../util/server-util.js';
 import AvatarChooser from './AvatarChooser.jsx';
 
 const SignUpForm = ({ updateErrorMessage }) => {
@@ -22,6 +22,13 @@ const SignUpForm = ({ updateErrorMessage }) => {
           updateErrorMessage(
             `Ya existe una cuenta con ${student.username} como nombre de usuario`
           );
+
+          setSubmitting(false);
+          return;
+        }
+
+        if (await phoneNumberTaken(student.phone_number)) {
+          updateErrorMessage("Ya existe una cuenta con este número de teléfono");
 
           setSubmitting(false);
           return;

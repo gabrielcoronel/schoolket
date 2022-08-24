@@ -179,6 +179,14 @@ async function existsStudent(username) {
   return { exists: result };
 }
 
+async function existsPhoneNumber(phone_number) {
+  const result = await exists(
+    STUDENT_TABLE_NAME, "phone_number", phone_number, "Failed to check if the phone number existed"
+  );
+
+  return { exists: result }
+}
+
 async function existsProduct(product_id) {
   const result = await exists(
     PRODUCT_TABLE_NAME, "product_id", product_id, "Failed to check if the product existed"
@@ -190,5 +198,5 @@ async function existsProduct(product_id) {
 export {
   createStudent, createProduct,
   getStudent, getProduct, getStudentProducts, getProductWithStudent,
-  existsStudent, existsProduct
+  existsStudent, existsProduct, existsPhoneNumber
 };

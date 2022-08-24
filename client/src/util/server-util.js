@@ -44,6 +44,18 @@ const usernameTaken = async (username) => {
   return json.exists;
 };
 
+const phoneNumberTaken = async (phone_number) => {
+  const response = await fetch(serverURL("/existsPhoneNumber"), {
+    method: "POST",
+    body: JSON.stringify({ phone_number }),
+    headers: JSONHeaders
+  });
+
+  const json = await response.json();
+
+  return json.exists;
+};
+
 const createStudent = (student, formData) => {
   const reputation = 25;
   const [avatar] = formData.values();
@@ -104,7 +116,7 @@ const getProductPictureURLs = (product_id, numberPictures) => {
 };
 
 export {
-  JSONHeaders, serverURL, usernameTaken,
+  JSONHeaders, serverURL, usernameTaken, phoneNumberTaken,
   createStudent, createProduct,
   getStudent, getStudentAvatarURL,
   getProductWithStudent, getProductPictureURLs
