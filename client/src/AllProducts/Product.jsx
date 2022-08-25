@@ -10,7 +10,7 @@ const Product = ({ data }) => {
         className="flex justify-center items-center row-start-1 row-end-5 col-start-1 col-end-3"
       >
         <img
-          className="h-20 w-40 border border-blue-800"
+          className="h-40 w-30 border border-blue-800"
           src={pictureURL}
           alt=''
         />

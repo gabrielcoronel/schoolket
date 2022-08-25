@@ -24,11 +24,13 @@ const SignInForm = ({ updateErrorMessage }) => {
         let student = null;
 
         try {
+          // Refactorizar
           student = await fetch(serverURL("/getStudent"), {
             method: "POST",
             body: JSON.stringify({ username: values.username }),
             headers: JSONHeaders
           });
+          student = await student.json();
         } catch (err) {
           updateErrorMessage("Algo salió mal");
 

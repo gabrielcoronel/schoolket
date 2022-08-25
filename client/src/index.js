@@ -10,5 +10,5 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <Product product_id={2} />
+  <AllProducts />
 );
