@@ -20,7 +20,7 @@ const Product = ({ product_id }) => {
   const student = data.student;
 
   return (
-    <div className="w-4/5 h-60 m-auto">
+    <div className="flex flex-col justify-center items-center w-4/5 shadow-xl m-auto">
       <Carousel urls={pictureURLs} />
 
       <ProductData product={product} />

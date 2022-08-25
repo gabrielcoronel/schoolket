@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CarouselButton from './CarouselButton.jsx';
+import CarouselDisplayer from './CarouselDisplayer.jsx';
 
 const Carousel = ({ urls }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -22,26 +23,12 @@ const Carousel = ({ urls }) => {
   };
 
   return (
-    <div className="w-full h-2/5 flex flex-row justify-center items-center">
-      <button
-        className="Carousel-button"
-        onClick={previous}
-      >
-        <FontAwesomeIcon icon={faChevronLeft} />
-      </button>
+    <div className="flex flex-row justify-evenly items-center">
+      <CarouselButton onClick={previous} icon={faChevronLeft} />
 
-      <img
-        className="w-10/12 h-full"
-        src={urls[currentIndex]}
-        alt=''
-      />
+      <CarouselDisplayer url={urls[currentIndex]} />
 
-      <button
-        className="Carousel-button"
-        onClick={next}
-      >
-        <FontAwesomeIcon icon={faChevronRight} />
-      </button>
+      <CarouselButton onClick={next} icon={faChevronRight} />
     </div>
   );
 };

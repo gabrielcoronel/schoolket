@@ -4,7 +4,7 @@
 
 @layer components {
   .Carousel-button {
-    @apply w-1/12 h-full;
+    @apply w-20 h-20 rounded-full;
     @apply bg-blue-800 text-white font-bold;
     @apply hover:bg-blue-900;
   }

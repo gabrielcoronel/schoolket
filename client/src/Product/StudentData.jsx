@@ -23,11 +23,10 @@ const StudentData = ({ student }) => {
     reputation, phone_number
   } = student;
   const fullName = `${name} ${surname1} ${surname2}`;
-  const normalizedReputation = roundToTwoDigits(reputation / NUMBER_OF_STARS);
   const normalizedPhoneNumber = normalizePhoneNumber(phone_number);
 
   return (
-    <div className="bg-blue-800 text-white grid grid-rows-3 grid-cols-4 gap-1 p-4">
+    <div className="bg-blue-800 text-white grid grid-rows-3 grid-cols-4 gap-1 p-4 w-full">
       <span
         className="text-sm font-bold italic row-start-1 row-end-2 col-start-1 col-end-4"
       >
