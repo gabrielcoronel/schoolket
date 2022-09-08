@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Product from './Product.jsx';
-import SearchBar from './SearchBar.jsx';
+import ProductBox from './ProductBox.jsx';
+import SearchBar from '../app-components/SearchBar.jsx';
 
 const searchProduct = (search, products) => {
   return products.filter((product) => {
@@ -8,9 +8,9 @@ const searchProduct = (search, products) => {
   });
 };
 
-const View = ({ data }) => {
+const ProductsView = ({ products }) => {
   const [search, setSearch] = useState("");
-  const products = searchProduct(search, data.products);
+  const foundProducts = searchProduct(search, products);
 
   return (
     <div>
@@ -20,9 +20,9 @@ const View = ({ data }) => {
 
       <div className="flex flex-col gap-6 p-4 w-1/2 m-auto">
         {
-          products.map((product) => {
+          foundProducts.map((product) => {
             return (
-              <Product key={product.product_id} data={product} />
+              <ProductBox key={product.product_id} product={product} />
             );
           })
         }
@@ -31,4 +31,4 @@ const View = ({ data }) => {
   );
 }
 
-export default View;
+export default ProductsView;

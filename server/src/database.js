@@ -135,8 +135,8 @@ async function getProduct(product_id) {
 async function getStudentProducts(username) {
   const query = `
     SELECT product_id, title, description, price
-    FROM ${PRODUCT_TABLE_NAME} JOIN ${STUDENT_TABLE_NAME} AS username
-    WHERE ${PRODUCT_TABLE_NAME}.username = '${username}'
+    FROM ${PRODUCT_TABLE_NAME}
+    WHERE username = '${username}'
   `;
 
   try {

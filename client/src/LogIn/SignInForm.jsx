@@ -3,7 +3,13 @@ import * as FormComponents from '../form-components';
 import * as Validation from '../util/validation-schemas.js';
 import { serverURL, usernameTaken, JSONHeaders } from '../util/server-util.js';
 
+// Desorden
+import { useContext } from 'react';
+import UsernameContext from '../UsernameContext.js';
+
 const SignInForm = ({ updateErrorMessage }) => {
+  const { value, setValue } = useContext(UsernameContext);
+
   return (
     <Formik.Formik
       initialValues={{
@@ -47,6 +53,7 @@ const SignInForm = ({ updateErrorMessage }) => {
 
         resetForm();
         updateErrorMessage("");
+	setValue(student.username);
         setSubmitting(false);
         return;
       }}

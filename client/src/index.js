@@ -4,19 +4,54 @@ import CreateProduct from './CreateProduct/CreateProduct.jsx';
 import Profile from './Profile/Profile.jsx';
 import Product from './Product/Product.jsx';
 import AllProducts from './AllProducts/AllProducts.jsx';
+import MyProducts from './MyProducts/MyProducts.jsx';
 import Main from './Main/Main.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-const App = () => {
+// Wrappers
+import ProfileWrapper from './RouteWrappers/ProfileWrapper.jsx';
+import ProductWrapper from './RouteWrappers/ProductWrapper.jsx';
+
+// Contexto
+import UsernameContext from './UsernameContext.js';
+import { useContext, useState } from 'react';
+
+const AppRouter = () => {
+  const { value, setValue } = useContext(UsernameContext);
+  const isLoggedIn = value === null ? false : true;
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Main isLoggedIn={true}/>}>
+        <Route path='/' element={<Main isLoggedIn={isLoggedIn} />}>
           <Route path='products' element={<AllProducts />} />
-          <Route path='me' element={<Profile username="edgar" />} />
+
+          <Route path='myproducts' element={<MyProducts username={value} />} />
+
+          <Route path='me' element={<Profile username={value} />} />
+
+          <Route path='/student'>
+            <Route path=':username' element={<ProfileWrapper />} />
+          </Route>
+
+          <Route path='/product'>
+            <Route path=':product_id' element={<ProductWrapper />} />
+          </Route>
         </Route>
+
+        <Route path='*' element={<h1>Oops!</h1>} />
       </Routes>
     </BrowserRouter>
+  );
+};
+
+const App = () => {
+  const [value, setValue] = useState(null);
+
+  return (
+    <UsernameContext.Provider value={{ value, setValue }}>
+      <AppRouter />
+    </UsernameContext.Provider>
   );
 };
 

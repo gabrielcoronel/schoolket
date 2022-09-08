@@ -1,6 +1,6 @@
 import { useAsync } from '../hooks';
 import { getAllProducts } from '../util/server-util.js';
-import View from './View.jsx';
+import ProductsView from '../app-components/ProductsView.jsx';
 import './AllProducts.css';
 
 const AllProducts = () => {
@@ -9,7 +9,7 @@ const AllProducts = () => {
   if (fetched === null)
     return <div>Cargando</div>
   else
-    return <View data={fetched} />
+    return <ProductsView products={fetched.products} />
 };
 
 export default AllProducts;

@@ -4,7 +4,13 @@ import * as Validation from '../util/validation-schemas.js';
 import { usernameTaken, phoneNumberTaken, createStudent } from '../util/server-util.js';
 import AvatarChooser from './AvatarChooser.jsx';
 
+// Desorden
+import { useContext } from 'react';
+import UsernameContext from '../UsernameContext';
+
 const SignUpForm = ({ updateErrorMessage }) => {
+  const { value, setValue } = useContext(UsernameContext);
+
   return (
     <Formik.Formik
       initialValues={{
@@ -45,6 +51,7 @@ const SignUpForm = ({ updateErrorMessage }) => {
 
         resetForm();
         updateErrorMessage("");
+	setValue(student.username);
         setSubmitting(false);
         return;
       }}

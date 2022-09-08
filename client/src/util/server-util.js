@@ -27,11 +27,6 @@ const arrayToIDMap = (arr) => {
   return IDMap;
 };
 
-const logFormData = (formData) => {
-  for (const [key, value] of formData.entries())
-    console.log(key, value);
-};
-
 const usernameTaken = async (username) => {
   const response = await fetch(serverURL("/existsStudent"), {
     method: "POST",
@@ -130,10 +125,21 @@ const getProductFirstPictureURL = (product_id) => {
   return `${serverURL("/productPictures")}/${product_id}/${0}.png`
 }
 
+const getStudentProducts = async (username) => {
+  const response = await fetch(serverURL("/getStudentProducts"), {
+    method: "POST",
+    body: JSON.stringify({ username }),
+    headers: JSONHeaders
+  });
+  const json = await response.json();
+
+  return json;
+};
+
 export {
   JSONHeaders, serverURL, usernameTaken, phoneNumberTaken,
   createStudent, createProduct,
   getStudent, getStudentAvatarURL, getAllProducts,
   getProductWithStudent, getProductPictureURLs,
-  getProductFirstPictureURL
+  getProductFirstPictureURL, getStudentProducts
 };

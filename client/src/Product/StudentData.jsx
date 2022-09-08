@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Stars } from '../general-components';
+import { Link } from 'react-router-dom';
 
 const NUMBER_OF_STARS = 5;
 
@@ -27,11 +28,12 @@ const StudentData = ({ student }) => {
 
   return (
     <div className="bg-blue-800 text-white grid grid-rows-3 grid-cols-4 gap-1 p-4 w-full">
-      <span
+      <Link
+        to={`/student/${username}`}
         className="text-sm font-bold italic row-start-1 row-end-2 col-start-1 col-end-4"
       >
         {username}
-      </span>
+      </Link>
 
       <span
         className="text-md font-bold row-start-2 row-end-3 col-start-1 col-end-4"

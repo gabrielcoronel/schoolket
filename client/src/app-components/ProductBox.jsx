@@ -1,7 +1,8 @@
 import { getProductFirstPictureURL } from "../util/server-util.js";
+import { Link } from "react-router-dom";
 
-const Product = ({ data }) => {
-  const { product_id, title, description, price } = data;
+const ProductBox = ({ product }) => {
+  const { product_id, title, description, price } = product;
   const pictureURL = getProductFirstPictureURL(product_id);
 
   return (
@@ -16,11 +17,12 @@ const Product = ({ data }) => {
         />
       </div>
 
-      <span
+      <Link
+        to={`/product/${product_id}`}
         className="row-start-1 row-end-2 col-start-3 col-end-7 text-blue-800 font-bold truncate"
       >
         {title}
-      </span>
+      </Link>
 
       <span
         className="row-start-1 row-end-2 col-start-7 col-end-8 text-green-500 truncate"
@@ -37,4 +39,4 @@ const Product = ({ data }) => {
   );
 };
 
-export default Product;
+export default ProductBox;
