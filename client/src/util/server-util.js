@@ -52,9 +52,8 @@ const phoneNumberTaken = async (phone_number) => {
 };
 
 const createStudent = (student, formData) => {
-  const reputation = 25;
   const [avatar] = formData.values();
-  const requestFormData = objectToFormData({ avatar, reputation, ...student });
+  const requestFormData = objectToFormData({ avatar, ...student });
 
   return fetch(serverURL("/createStudent"), {
     method: "POST",

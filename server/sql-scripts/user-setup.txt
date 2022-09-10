@@ -1,0 +1,7 @@
+DROP USER IF EXISTS expotec;
+
+CREATE USER expotec IDENTIFIED BY 'martir';
+
+GRANT ALL PRIVILEGES ON *.* TO 'expotec'@localhost IDENTIFIED BY 'martir';
+
+FLUSH PRIVILEGES;
