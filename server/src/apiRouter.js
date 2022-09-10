@@ -93,7 +93,7 @@ apiRouter.post("/getStudentProducts", async (req, res) => {
     const normalProducts = products.map((product) => {
       const numberPictures = IMG.countProductPictures(product.product_id);
 
-      return { numberPictures, ...product};
+      return { numberPictures, ...product };
     });
 
     res.json({ products: normalProducts });
@@ -166,6 +166,20 @@ apiRouter.post("/existsProduct", async (req, res) => {
 
     res.sendStatus(HTTP_FAILURE);
     return;
+  }
+});
+
+apiRouter.post("/toggleIsSold", async (req, res) => {
+  const product_id = req.body.product_id;
+
+  try {
+    await DB.toggleIsSold(product_id);
+
+    res.sendStatus(HTTP_SUCCESS);
+  } catch (err) {
+    console.log(err);
+
+    res.sendStatus(HTTP_FAILURE);
   }
 });
 

@@ -205,9 +205,22 @@ async function existsProduct(product_id) {
   return { exists: result };
 }
 
+async function toggleIsSold(product_id) {
+  const SQLquery = `
+    UPDATE ${PRODUCT_TABLE_NAME}
+    SET is_sold = NOT is_sold
+    WHERE product_id = ${product_id}
+  `;
+
+  const result = await pool.query(SQLquery);
+
+  return result;
+}
+
 export {
   createStudent, createProduct,
   getStudent, getProduct, getStudentProducts,
   getProductWithStudent, getAllProducts,
-  existsStudent, existsProduct, existsPhoneNumber
+  existsStudent, existsProduct, existsPhoneNumber,
+  toggleIsSold
 };
