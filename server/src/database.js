@@ -1,10 +1,10 @@
 import mariadb from "mariadb";
 
 // Constantes de Maria DB
-const HOST = '127.0.0.1';
-const USER = 'gabriel';
-const PASSWORD = 'magicmike33';
-const DATABASE_NAME = 'expotec1';
+const HOST = 'localhost'; // Provar
+const USER = 'root';
+const PASSWORD = '';
+const DATABASE_NAME = 'schoolket'; // Actualizar
 const CONNECTION_LIMIT = 100;
 const STUDENT_TABLE_NAME = "student";
 const PRODUCT_TABLE_NAME = "product";

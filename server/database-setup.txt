@@ -1,5 +1,8 @@
-DROP TABLE IF EXISTS student;
-DROP TABLE IF EXISTS product;
+DROP DATABASE IF EXISTS schoolket;
+
+CREATE DATABASE schoolket;
+
+USE schoolket;
 
 CREATE TABLE student (
   username 		VARCHAR(100) 	NOT NULL 	PRIMARY KEY,
@@ -7,7 +10,7 @@ CREATE TABLE student (
   name 	   		VARCHAR(100) 	NOT NULL,
   surname1 		VARCHAR(100) 	NOT NULL,
   surname2 		VARCHAR(100) 	NOT NULL,
-  reputation 		INT 		NOT NULL,
+  reputation 	INT 		      DEFAULT 25,
   phone_number 		CHAR(8) 	NOT NULL UNIQUE
 );
 
@@ -16,5 +19,6 @@ CREATE TABLE product (
   product_id 		INT 		NOT NULL	PRIMARY KEY	AUTO_INCREMENT,
   title 		VARCHAR(100) 	NOT NULL,
   description 		TEXT 		NOT NULL,
-  price 		INT 		NOT NULL
+  price 		INT 		NOT NULL,
+  is_sold   BOOLEAN DEFAULT FALSE
 );
