@@ -123,9 +123,9 @@ apiRouter.post("/getProductWithStudent", async (req, res) => {
   }
 });
 
-// CUIDADO: Esta es GET
-apiRouter.get("/getAllProducts", async (req, res) => {
-  const products = await DB.getAllProducts();
+apiRouter.post("/getAllProducts", async (req, res) => {
+  const username = req.body.username;
+  const products = await DB.getAllProducts(username);
 
   res.json(products);
 });

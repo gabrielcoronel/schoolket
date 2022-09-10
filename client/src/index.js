@@ -37,6 +37,8 @@ const AppRouter = () => {
           <Route path='/product'>
             <Route path=':product_id' element={<ProductWrapper />} />
           </Route>
+
+          <Route path='/createproduct' element={<CreateProduct />} />
         </Route>
 
         <Route path='*' element={<h1>Oops!</h1>} />

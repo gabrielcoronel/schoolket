@@ -171,10 +171,11 @@ async function getProductWithStudent(product_id) {
   return view;
 }
 
-async function getAllProducts() {
+async function getAllProducts(username) {
   const query = `
     SELECT product_id, title, description, price
     FROM ${PRODUCT_TABLE_NAME}
+    WHERE is_sold = FALSE AND username != '${username}'
   `;
   const result = await pool.query(query);
 
