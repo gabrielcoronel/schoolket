@@ -24,6 +24,8 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Main isLoggedIn={isLoggedIn} />}>
+          <Route index element={<AllProducts />} />
+
           <Route path='products' element={<AllProducts />} />
 
           <Route path='myproducts' element={<MyProducts username={value} />} />
