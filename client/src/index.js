@@ -4,6 +4,7 @@ import Profile from './Profile/Profile.jsx';
 import AllProducts from './AllProducts/AllProducts.jsx';
 import MyProducts from './MyProducts/MyProducts.jsx';
 import Main from './Main/Main.jsx';
+import InvalidRoute from './app-components/InvalidRoute.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles/global.css';
 
@@ -42,7 +43,7 @@ const AppRouter = () => {
           <Route path='/createproduct' element={<CreateProduct />} />
         </Route>
 
-        <Route path='*' element={<h1>Oops!</h1>} />
+        <Route path='*' element={<InvalidRoute />} />
       </Routes>
     </BrowserRouter>
   );

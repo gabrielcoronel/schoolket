@@ -4,6 +4,8 @@ import { useAsync } from '../hooks';
 import { getAllProducts } from '../util/server-util.js';
 import ProductsView from '../app-components/ProductsView.jsx';
 import SearchBar from '../app-components/SearchBar.jsx';
+import NotFound from './NotFound.jsx';
+import Loading from '../app-components/Loading.jsx';
 import './AllProducts.css';
 
 const searchProduct = (search, products) => {
@@ -18,9 +20,11 @@ const AllProducts = () => {
   const fetched = useAsync(() => getAllProducts(value));
 
   if (fetched === null)
-    return <div>Cargando</div>;
+    return <Loading />;
 
   const products = searchProduct(search, fetched.products);
+
+  console.log(products);
 
   return (
     <div>
@@ -28,7 +32,12 @@ const AllProducts = () => {
         <SearchBar search={search} updateSearch={setSearch} />
       </div>
 
-      <ProductsView products={products} />
+      {
+        (products.length === 0) ?
+          <NotFound /> :
+          <ProductsView products={products} />
+      }
+
     </div>
   );
 };

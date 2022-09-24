@@ -24,7 +24,7 @@ const Text = () => {
 
 const AddProduct = () => {
   return (
-    <div className="grid grid-cols-3 gap-2 p-4 w-1/2 border border-slate-300 shadow-xl">
+    <div className="bg-white grid grid-cols-3 gap-2 p-4 w-1/2 border border-slate-300 rounded-xl shadow-2xl">
       <Button />
 
       <Text />

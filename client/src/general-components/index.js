@@ -4,8 +4,9 @@ import ErrorBox from "./ErrorBox.jsx";
 import TextArea from './TextArea.jsx';
 import IconedLabel from './IconedLabel.jsx';
 import Stars from './Stars.jsx';
+import FullScreenMessage from './FullScreenMessage.jsx';
 
 export {
   Field, FileChooser, ErrorBox, TextArea,
-  IconedLabel, Stars
+  IconedLabel, Stars, FullScreenMessage
 };

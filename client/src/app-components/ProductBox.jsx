@@ -6,12 +6,12 @@ const ProductBox = ({ product }) => {
   const pictureURL = getProductFirstPictureURL(product_id);
 
   return (
-    <div className="grid grid-rows-4 grid-cols-7 gap-2 p-4 border border-slate-300 shadow-xl">
+    <div className="bg-white grid grid-rows-4 grid-cols-7 gap-2 p-4 border border-slate-300 rounded-xl shadow-2xl">
       <div
         className="flex justify-center items-center row-start-1 row-end-5 col-start-1 col-end-3"
       >
         <img
-          className="h-40 w-30 border border-blue-800"
+          className="h-40 w-30"
           src={pictureURL}
           alt=''
         />
@@ -31,7 +31,7 @@ const ProductBox = ({ product }) => {
       </span>
 
       <span
-        className="row-start-2 row-end-5 col-start-3 col-end-8 p-2 italic bg-slate-100 break-words text-ellipsis"
+        className="row-start-2 row-end-5 col-start-3 col-end-8 p-2 italic break-words text-ellipsis"
       >
         {description}
       </span>
