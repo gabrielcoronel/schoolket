@@ -18,11 +18,11 @@
 
   .Field {
     @apply flex flex-col justify-evenly items-start;
-    @apply text-black font-bold;
+    @apply text-blue-800 font-bold;
   }
 
   .Field input {
-    @apply border-black border;
+    @apply border border-slate-400 rounded-md;
     @apply font-normal;
   }
 

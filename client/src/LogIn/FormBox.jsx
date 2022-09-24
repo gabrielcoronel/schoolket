@@ -7,8 +7,8 @@ const FormBox = ({ updateErrorMessage }) => {
   const [isSigningUp, setIsSigningUp] = React.useState(true);
 
   return (
-    <div className="w-full shadow-xl">
-      <div className="mb-3">
+    <div className="bg-white w-full shadow-2xl">
+      <div>
         <ModeButton
           label="Crear cuenta"
           selected={isSigningUp}
@@ -22,15 +22,17 @@ const FormBox = ({ updateErrorMessage }) => {
         />
       </div>
 
-      {
-        isSigningUp ?
-          <SignUpForm
-            updateErrorMessage={updateErrorMessage}
-          /> :
-          <SignInForm
-            updateErrorMessage={updateErrorMessage}
-          />
-      }
+      <div className="p-4">
+        {
+          isSigningUp ?
+            <SignUpForm
+              updateErrorMessage={updateErrorMessage}
+            /> :
+            <SignInForm
+              updateErrorMessage={updateErrorMessage}
+            />
+        }
+      </div>
     </div>
   );
 };

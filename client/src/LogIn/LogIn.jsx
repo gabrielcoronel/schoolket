@@ -9,7 +9,7 @@ const LogIn = () => {
 
   return (
     <div
-      className="w-1/4 m-auto"
+      className="w-1/3 mx-auto mt-4"
     >
       <FormComponents.ErrorBox
         message={errorMessage}

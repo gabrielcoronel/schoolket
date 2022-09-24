@@ -1,12 +1,11 @@
 import ReactDOM from 'react-dom/client'
-import LogIn from './LogIn/LogIn.jsx';
 import CreateProduct from './CreateProduct/CreateProduct.jsx';
 import Profile from './Profile/Profile.jsx';
-import Product from './Product/Product.jsx';
 import AllProducts from './AllProducts/AllProducts.jsx';
 import MyProducts from './MyProducts/MyProducts.jsx';
 import Main from './Main/Main.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './styles/global.css';
 
 // Wrappers
 import ProfileWrapper from './RouteWrappers/ProfileWrapper.jsx';
@@ -17,7 +16,7 @@ import UsernameContext from './UsernameContext.js';
 import { useContext, useState } from 'react';
 
 const AppRouter = () => {
-  const { value, setValue } = useContext(UsernameContext);
+  const { value } = useContext(UsernameContext);
   const isLoggedIn = value === null ? false : true;
 
   return (
