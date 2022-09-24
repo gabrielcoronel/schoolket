@@ -27,7 +27,7 @@
   }
 
   .Field textarea {
-    @apply border-black border resize-none;
+    @apply border border-slate-400 rounded-md resize-none;
     @apply font-normal;
   }
 }

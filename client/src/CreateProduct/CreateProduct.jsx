@@ -17,7 +17,7 @@ const CreateProduct = () => {
         updateErrorMessage={setErrorMessage}
       />
 
-      <div className="w-full shadow-xl">
+      <div className="bg-white w-full shadow-2xl p-4">
         <Form
           updateErrorMessage={setErrorMessage}
           username={value}
