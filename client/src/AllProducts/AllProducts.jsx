@@ -14,7 +14,7 @@ const searchProduct = (search, products) => {
 
 const AllProducts = () => {
   const [search, setSearch] = useState("");
-  const { value, setValue } = useContext(UsernameContext);
+  const { value } = useContext(UsernameContext);
   const fetched = useAsync(() => getAllProducts(value));
 
   if (fetched === null)
