@@ -6,7 +6,9 @@ const useAsync = (asyncFunction) => {
   useEffect(() => {
     asyncFunction()
       .then((resolved) => setResult(resolved));
-  }, [result]);
+
+    console.log("bug");
+  }, []);
 
   return result;
 };

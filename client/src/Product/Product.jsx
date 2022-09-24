@@ -1,6 +1,5 @@
-import { useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import UsernameContext from '../UsernameContext.js';
-import { useAsync } from '../hooks';
 import { getProductWithStudent, getProductPictureURLs } from '../util/server-util.js';
 import Carousel from './Corousel.jsx';
 import ProductData from './ProductData.jsx';
@@ -9,8 +8,17 @@ import SoldButton from './SoldButton.jsx';
 import './Product.css';
 
 const Product = ({ product_id }) => {
-  const { value, setValue } = useContext(UsernameContext);
-  const data = useAsync(() => getProductWithStudent(product_id));
+  const { value } = useContext(UsernameContext);
+  const [data, setData] = useState(null);
+  const [isSold, setIsSold] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const fetched = await getProductWithStudent(product_id);
+      setData(fetched);
+      setIsSold(fetched.is_sold);
+    })();
+  }, [product_id]);
 
   if (data === null)
     return <div>Cargando</div>
@@ -33,7 +41,11 @@ const Product = ({ product_id }) => {
 
       {
         student.username === value ?
-          <SoldButton product_id={product_id} isSold={data.is_sold} /> :
+          <SoldButton
+            product_id={product_id}
+            isSold={isSold}
+            updateIsSold={setIsSold}
+          /> :
           null
       }
 
