@@ -24,8 +24,6 @@ const AllProducts = () => {
 
   const products = searchProduct(search, fetched.products);
 
-  console.log(products);
-
   return (
     <div>
       <div className="flex justify-center items-center">

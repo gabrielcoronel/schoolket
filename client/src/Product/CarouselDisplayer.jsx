@@ -1,6 +1,6 @@
 const CarouselDisplayer = ({ url }) => {
   return (
-    <div className="w-1/3">
+    <div className="flex flex-row justify-center items-center w-60 h-60">
       <img
         className="object-contain"
         src={url}

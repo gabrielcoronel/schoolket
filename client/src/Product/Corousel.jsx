@@ -23,7 +23,7 @@ const Carousel = ({ urls }) => {
   };
 
   return (
-    <div className="flex flex-row justify-evenly items-center">
+    <div className="flex flex-row justify-evenly items-center w-full">
       <CarouselButton onClick={previous} icon={faChevronLeft} />
 
       <CarouselDisplayer url={urls[currentIndex]} />
