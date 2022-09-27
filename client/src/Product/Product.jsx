@@ -5,6 +5,7 @@ import Carousel from './Corousel.jsx';
 import ProductData from './ProductData.jsx';
 import StudentData from './StudentData.jsx';
 import SoldButton from './SoldButton.jsx';
+import AlreadySold from './AlreadySold.jsx';
 import Loading from '../app-components/Loading.jsx';
 import './Product.css';
 
@@ -36,7 +37,7 @@ const Product = ({ product_id }) => {
     <div className="flex flex-col justify-center items-center w-4/5 shadow-xl m-auto">
       {
         (student.username !== value) && (data.is_sold) ?
-          <span>Ya este producto se vendió</span> :
+          <AlreadySold /> :
           null
       }
 
