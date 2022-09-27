@@ -13,7 +13,7 @@ const Profile = ({ username }) => {
     return <Loading />;
 
   return (
-    <div className="w-4/5 bg-white rounded-xl shadow-2xl m-auto">
+    <div className="bg-white w-4/5 rounded-xl shadow-2xl m-auto">
       <div className="flex flex-row justify-center pt-8">
         <Avatar url={avatarURL} />
       </div>
