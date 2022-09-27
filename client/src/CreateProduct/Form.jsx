@@ -4,10 +4,13 @@ import { createProduct } from '../util/server-util.js';
 import * as FormComponents from '../form-components';
 import * as GeneralComponents from '../general-components';
 import PictureChooser from './PictureChooser.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const Form = ({
   username, updateErrorMessage
 }) => {
+  const navigate = useNavigate();
+
   return (
     <Formik.Formik
       initialValues={{
@@ -29,6 +32,7 @@ const Form = ({
 
         resetForm();
         setSubmitting(false);
+        navigate(-1); // Devolverse a la página anterior
         return;
       }}
     >

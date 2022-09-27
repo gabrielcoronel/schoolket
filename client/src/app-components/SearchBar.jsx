@@ -4,6 +4,7 @@ const SearchBar = ({ search, updateSearch }) => {
       <input
         className="w-full border border-slate-400 text-blue-800 rounded-md px-2 py-1 focus:outline-none"
         type="text"
+        placeholder="¿Qué buscas?"
         value={search}
         onChange={(event) => updateSearch(event.target.value)}
       />

@@ -8,16 +8,16 @@ import './CreateProduct.css';
 
 const CreateProduct = () => {
   const [errorMessage, setErrorMessage] = useState("");
-  const { value, setValue } = useContext(UsernameContext);
+  const { value } = useContext(UsernameContext);
 
   return (
-    <div className="w-1/2 m-auto">
+    <div className="w-3/4 mx-auto mt-20">
       <FormComponents.ErrorBox
         message={errorMessage}
         updateErrorMessage={setErrorMessage}
       />
 
-      <div className="bg-white w-full shadow-2xl p-4">
+      <div className="bg-white w-full rounded-xl shadow-2xl p-4 border border-slate-300">
         <Form
           updateErrorMessage={setErrorMessage}
           username={value}

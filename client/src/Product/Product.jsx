@@ -34,7 +34,7 @@ const Product = ({ product_id }) => {
   const student = data.student;
 
   return (
-    <div className="bg-white flex flex-col justify-center items-center w-4/5 shadow-2xl m-auto">
+    <div className="bg-white flex flex-col justify-center items-center w-4/5 shadow-2xl mx-auto mt-6">
       {
         (student.username !== value) && (data.is_sold) ?
           <AlreadySold /> :

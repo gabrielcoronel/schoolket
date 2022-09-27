@@ -9,7 +9,7 @@ import { useContext } from 'react';
 import UsernameContext from '../UsernameContext';
 
 const SignUpForm = ({ updateErrorMessage }) => {
-  const { value, setValue } = useContext(UsernameContext);
+  const { setValue } = useContext(UsernameContext);
 
   return (
     <Formik.Formik
@@ -51,7 +51,7 @@ const SignUpForm = ({ updateErrorMessage }) => {
 
         resetForm();
         updateErrorMessage("");
-	setValue(student.username);
+        setValue(student.username);
         setSubmitting(false);
         return;
       }}

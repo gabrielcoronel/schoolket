@@ -26,7 +26,7 @@ const AllProducts = () => {
 
   return (
     <div>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center mt-4">
         <SearchBar search={search} updateSearch={setSearch} />
       </div>
 
