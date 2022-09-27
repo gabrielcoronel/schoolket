@@ -4,7 +4,7 @@
 
 @layer components {
   .ErrorBox {
-    @apply bg-red-50 text-red-600 text-center shadow-xl;
+    @apply bg-red-50 text-red-600 text-center shadow-2xl;
     @apply flex flex-row justify-center items-center h-10 mb-3;
   }
 
