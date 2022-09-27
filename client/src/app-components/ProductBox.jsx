@@ -11,7 +11,7 @@ const ProductBox = ({ product }) => {
         className="flex justify-center items-center row-start-1 row-end-5 col-start-1 col-end-3"
       >
         <img
-          className="h-40 w-30"
+          className="object-contain h-40 w-30"
           src={pictureURL}
           alt=''
         />
