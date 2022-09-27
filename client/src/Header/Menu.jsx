@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import MenuLink from './MenuLink.jsx';
 import { faUser, faBook, faCartShopping } from '@fortawesome/free-solid-svg-icons';
 

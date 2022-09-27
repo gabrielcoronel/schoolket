@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 
 const NUMBER_OF_STARS = 5;
 
-const roundToTwoDigits = (num) => Number(num.toFixed(2));
-
 const splitInHalf = (str) => {
   const length = str.length;
   const first = str.slice(0, length / 2);
@@ -30,7 +28,7 @@ const StudentData = ({ student }) => {
     <div className="bg-blue-800 text-white grid grid-rows-3 grid-cols-4 gap-1 p-4 w-full">
       <Link
         to={`/student/${username}`}
-        className="text-sm font-bold italic row-start-1 row-end-2 col-start-1 col-end-4"
+        className="text-sm font-bold italic row-start-1 row-end-2 col-start-1 col-end-4 hover:underline"
       >
         {username}
       </Link>

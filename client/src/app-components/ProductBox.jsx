@@ -19,7 +19,7 @@ const ProductBox = ({ product }) => {
 
       <Link
         to={`/product/${product_id}`}
-        className="row-start-1 row-end-2 col-start-3 col-end-7 text-blue-800 font-bold truncate"
+        className="row-start-1 row-end-2 col-start-3 col-end-7 text-blue-800 font-bold truncate hover:underline hover:text-blue-600"
       >
         {title}
       </Link>
