@@ -2,6 +2,7 @@ import express from "express";
 import fileUpload from 'express-fileupload';
 import * as DB from "./database.js";
 import * as IMG from "./image-management.js";
+import { getRelativePath } from "./paths.js";
 
 const HTTP_SUCCESS = 200;
 const HTTP_FAILURE = 400;
@@ -10,8 +11,8 @@ const apiRouter = express.Router();
 
 apiRouter.use(express.json());
 apiRouter.use(fileUpload({ createParentPath: true }));
-apiRouter.use("/productPictures", express.static("/home/gabriel/projects/expotec/server/product_pictures"));
-apiRouter.use("/avatar", express.static("/home/gabriel/projects/expotec/server/student_avatars"));
+apiRouter.use("/productPictures", express.static(getRelativePath("../product_pictures")));
+apiRouter.use("/avatar", express.static(getRelativePath("../student_avatars")));
 
 apiRouter.post("/createStudent", async (req, res) => {
   const [avatar] = Object.values(req.files);

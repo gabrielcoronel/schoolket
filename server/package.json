@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec 'node --trace-warnings src/main.js'"
+    "start": "nodemon src/main.js"
   },
   "keywords": [],
   "author": "Gabriel Coronel",
