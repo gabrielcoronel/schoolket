@@ -1,0 +1,11 @@
+# Node modules
+server/node_modules
+client/node_modules
+
+# Carpetas/archivos internos
+server/product_pictures
+server/student_avatars
+client/.gitignore
+
+# Extensiones de archivo
+*.jpg
