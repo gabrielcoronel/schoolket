@@ -1,4 +1,5 @@
 import './Footer.css';
+import logo from 'logo.jpeg';
 
 const Footer = () => {
   return (
@@ -7,6 +8,13 @@ const Footer = () => {
         <span className="text-5xl text-center">
           Schoolket
         </span>
+      </div>
+
+      <div className="flex flex-row justify-center items-center">
+        <img className="rounded-full h-40 w-40"
+          src={logo}
+          alt=""
+        />
       </div>
 
       <div className="flex flex-col justify-evenly items-start text-md p-4">
