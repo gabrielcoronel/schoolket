@@ -218,10 +218,60 @@ async function toggleIsSold(product_id) {
   return result;
 }
 
+async function getStudentStrikes(username) {
+  const SQLquery = `
+    SELECT strikes from ${STUDENT_TABLE_NAME}
+    WHERE username = '${username}';
+  `;
+
+  const [{ strikes }] = await pool.query(SQLquery);
+
+  return strikes;
+}
+
+async function addStudentStrike(username) {
+  const SQLquery = `
+    UPDATE ${STUDENT_TABLE_NAME}
+    SET strikes = strikes + 1
+    WHERE username = '${username}'
+  `;
+
+  const result = await pool.query(SQLquery);
+
+  return result;
+}
+
+async function restartStudentStrikes(username) {
+  const SQLquery = `
+    UPDATE ${STUDENT_TABLE_NAME}
+    SET strikes = 0
+    WHERE username = '${username}'
+  `;
+
+  const result = await pool.query(SQLquery);
+
+  return result;
+}
+
+async function punishStudent(username) {
+  const REPUTATION_DECREASE = 5;
+
+  const SQLquery = `
+    UPDATE ${STUDENT_TABLE_NAME}
+    SET reputation = reputation - ${REPUTATION_DECREASE}
+    WHERE username = '${username}'
+  `;
+
+  const result = await pool.query(SQLquery);
+
+  return result;
+}
+
 export {
   createStudent, createProduct,
   getStudent, getProduct, getStudentProducts,
   getProductWithStudent, getAllProducts,
   existsStudent, existsProduct, existsPhoneNumber,
-  toggleIsSold
+  toggleIsSold, getStudentStrikes, addStudentStrike,
+  punishStudent, restartStudentStrikes
 };

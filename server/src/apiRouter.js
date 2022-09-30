@@ -184,4 +184,20 @@ apiRouter.post("/toggleIsSold", async (req, res) => {
   }
 });
 
+apiRouter.post("/runStrike", async (req, res) => {
+  const username = req.body.username;
+
+  const MAX_STRIKES = 3;
+  const strikes = await DB.getStudentStrikes(username);
+
+  console.log(strikes);
+
+  if (strikes >= (MAX_STRIKES - 1)) {
+    await DB.restartStudentStrikes(username);
+    await DB.punishStudent(username);
+  } else {
+    await DB.addStudentStrike(username);
+  }
+});
+
 export default apiRouter;

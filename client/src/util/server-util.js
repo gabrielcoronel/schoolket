@@ -143,11 +143,19 @@ const toggleIsSold = (product_id) => {
   });
 };
 
+const runStrike = (username) => {
+  return fetch(serverURL("/runStrike"), {
+    method: "POST",
+    body: JSON.stringify({ username }),
+    headers: JSONHeaders
+  });
+};
+
 export {
   JSONHeaders, serverURL, usernameTaken, phoneNumberTaken,
   createStudent, createProduct,
   getStudent, getStudentAvatarURL, getAllProducts,
   getProductWithStudent, getProductPictureURLs,
   getProductFirstPictureURL, getStudentProducts,
-  toggleIsSold
+  toggleIsSold, runStrike
 };
