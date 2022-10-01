@@ -4,7 +4,7 @@ import './Header.css';
 
 const Header = ({ isLoggedIn }) => {
   return (
-    <div className="flex flex-row justify-between items-center bg-blue-800 text-white w-full p-2">
+    <div className="flex flex-row justify-between items-center bg-blue-800 text-white w-full p-2 pr-6">
       <Figure />
 
       {

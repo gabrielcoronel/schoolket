@@ -3,7 +3,7 @@ import logo from './logo.jpeg';
 
 const Footer = () => {
   return (
-    <div className="flex flex-row justify-evenly items-center w-full bg-blue-800 text-white mt-8 p-2">
+    <div className="flex flex-row justify-evenly items-center w-full bg-blue-800 text-white mt-60 p-2">
       <div className="flex flex-row justify-center items-center p-4">
         <span className="text-3xl text-center">
           Schoolket
