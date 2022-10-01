@@ -3,12 +3,14 @@ import { IconedLabel } from "../general-components";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { runStrike } from "../util/server-util";
 
-const ReportButton = ({ username}) => {
+const ReportButton = ({ username, updateJustReported }) => {
   const buttonRef = useRef(null);
 
   const handleClick = () => {
     runStrike(username);
     buttonRef.current.disabled = true;
+
+    updateJustReported(true);
   };
 
   return (
