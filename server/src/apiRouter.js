@@ -14,6 +14,16 @@ apiRouter.use(fileUpload({ createParentPath: true }));
 apiRouter.use("/productPictures", express.static(getRelativePath("../product_pictures")));
 apiRouter.use("/avatar", express.static(getRelativePath("../student_avatars")));
 
+// Helper porque el proceso de baneo es muy largo
+async function banStudent(username) {
+  const productIDs = await DB.getStudentProductIDs(username);
+
+  IMG.deleteProductPictures(productIDs);
+  IMG.deleteStudentAvatar(username);
+  await DB.deleteStudentProducts(username)
+  await DB.deleteStudent(username);
+}
+
 apiRouter.post("/createStudent", async (req, res) => {
   const [avatar] = Object.values(req.files);
   const student = req.body;
@@ -190,11 +200,15 @@ apiRouter.post("/runStrike", async (req, res) => {
   const MAX_STRIKES = 3;
   const strikes = await DB.getStudentStrikes(username);
 
-  console.log(strikes);
-
   if (strikes >= (MAX_STRIKES - 1)) {
     await DB.restartStudentStrikes(username);
     await DB.punishStudent(username);
+
+    const reputation = await DB.getStudentReputation(username);
+
+    if (reputation <= 0) {
+      await banStudent(username);
+    }
   } else {
     await DB.addStudentStrike(username);
   }

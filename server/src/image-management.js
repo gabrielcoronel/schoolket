@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs';
+import { readdirSync, rmSync } from 'node:fs';
 import { getRelativePath } from './paths.js';
 
 const IMAGE_FORMAT = "png";
@@ -17,6 +17,17 @@ const storeProductPictures = (product_id, pictures) => {
   }));
 };
 
+const deleteStudentAvatar = (username) => {
+  rmSync(getRelativePath(`../student_avatars/${username}.png`));
+};
+
+const deleteProductPictures = (productIDs) => {
+  for (const id of productIDs)
+    rmSync(getRelativePath(`../product_pictures/${id}`), {
+      recursive: true
+    });
+};
+
 const countProductPictures = (product_id) => {
   const path = getRelativePath(`../product_pictures/${product_id}`);
   const files = readdirSync(path);
@@ -26,5 +37,6 @@ const countProductPictures = (product_id) => {
 
 export {
   storeProductPictures, storeStudentAvatar,
-  countProductPictures
+  countProductPictures, deleteStudentAvatar,
+  deleteProductPictures
 };

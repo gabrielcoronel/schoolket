@@ -267,11 +267,61 @@ async function punishStudent(username) {
   return result;
 }
 
+async function getStudentReputation(username) {
+  const SQLquery = `
+    SELECT reputation FROM ${STUDENT_TABLE_NAME}
+    WHERE username = '${username}'
+  `;
+
+  const [{ reputation }] = await pool.query(SQLquery);
+
+  return reputation;
+}
+
+async function deleteStudent(username) {
+  const SQLquery = `
+    DELETE FROM ${STUDENT_TABLE_NAME}
+    WHERE username = '${username}'
+  `;
+
+  const result = await pool.query(SQLquery);
+
+  return result;
+}
+
+async function deleteStudentProducts(username) {
+  const SQLquery = `
+    DELETE ${PRODUCT_TABLE_NAME} FROM
+    ${STUDENT_TABLE_NAME} JOIN ${PRODUCT_TABLE_NAME}
+    USING (username)
+    WHERE username = '${username}'
+  `;
+
+  const result = await pool.query(SQLquery);
+
+  return result;
+}
+
+async function getStudentProductIDs(username) {
+  const SQLquery = `
+    SELECT product_id FROM
+    ${STUDENT_TABLE_NAME} JOIN ${PRODUCT_TABLE_NAME}
+    USING (username)
+    WHERE username = '${username}'
+  `;
+
+  const results = await pool.query(SQLquery);
+  const normalizedResults = results.map((product) => product.product_id);
+
+  return normalizedResults;
+};
+
 export {
   createStudent, createProduct,
   getStudent, getProduct, getStudentProducts,
   getProductWithStudent, getAllProducts,
   existsStudent, existsProduct, existsPhoneNumber,
   toggleIsSold, getStudentStrikes, addStudentStrike,
-  punishStudent, restartStudentStrikes
+  punishStudent, restartStudentStrikes, getStudentReputation,
+  deleteStudent, deleteStudentProducts, getStudentProductIDs
 };
